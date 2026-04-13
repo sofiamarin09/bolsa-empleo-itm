@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Empleabilidad - ITM</title>
+    <title>ITM - Bolsa de empleo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
@@ -15,7 +15,7 @@
 
         .hero { background: #1a3c6e; color: white; text-align: center; padding: 70px 20px 60px; }
         .hero h2 { font-size: 34px; font-weight: 600; margin-bottom: 14px; }
-        .hero p { font-size: 16px; max-width: 600px; margin: 0 auto 28px; line-height: 1.7; opacity: 0.9; }
+        .hero p { font-size: 15px; max-width: 620px; margin: 0 auto 28px; line-height: 1.7; opacity: 0.9; }
         .btn-primary { background: #e8a820; color: #1a3c6e; padding: 14px 36px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
         .btn-primary:hover { background: #d4951a; }
 
@@ -26,23 +26,24 @@
         .bg-white { background: white; }
         .bg-gray { background: #f5f5f5; }
 
-        .perfiles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .perfiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; margin: 0 auto; }
         .perfil-card { border-radius: 10px; padding: 30px 24px; text-align: center; }
         .perfil-card.estudiante { background: #E6F1FB; }
         .perfil-card.egresado { background: #E1F5EE; }
-        .perfil-card.externo { background: #FAEEDA; }
         .perfil-icon { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; }
         .perfil-card.estudiante .perfil-icon { background: #B5D4F4; }
         .perfil-card.egresado .perfil-icon { background: #9FE1CB; }
-        .perfil-card.externo .perfil-icon { background: #FAC775; }
         .perfil-card h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
         .perfil-card.estudiante h4 { color: #0C447C; }
         .perfil-card.egresado h4 { color: #085041; }
-        .perfil-card.externo h4 { color: #633806; }
         .perfil-card p { font-size: 14px; line-height: 1.6; }
         .perfil-card.estudiante p { color: #185FA5; }
         .perfil-card.egresado p { color: #0F6E56; }
-        .perfil-card.externo p { color: #854F0B; }
+
+        .banner-externo { background: #FAEEDA; border-radius: 10px; padding: 20px 24px; max-width: 600px; margin: 24px auto 0; display: flex; align-items: flex-start; gap: 16px; }
+        .banner-externo-icon { width: 42px; height: 42px; background: #FAC775; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .banner-externo h4 { font-size: 15px; font-weight: 600; color: #633806; margin-bottom: 4px; }
+        .banner-externo p { font-size: 13px; color: #854F0B; line-height: 1.6; }
 
         .pasos-list { display: flex; flex-direction: column; gap: 14px; max-width: 700px; margin: 0 auto; }
         .paso-item { display: flex; align-items: center; gap: 16px; background: white; border-radius: 10px; padding: 18px 22px; border: 1px solid #e8e8e8; }
@@ -55,7 +56,7 @@
         .faq-item h4 { font-size: 15px; font-weight: 600; color: #1a3c6e; margin-bottom: 6px; }
         .faq-item p { font-size: 13px; color: #666; line-height: 1.6; }
 
-        .footer { background: #1a3c6e; color: white; text-align: center; padding: 24px 20px; margin-top: 0; }
+        .footer { background: #1a3c6e; color: white; text-align: center; padding: 24px 20px; }
         .footer p { font-size: 13px; opacity: 0.8; margin-bottom: 4px; }
         .footer p:last-child { opacity: 0.6; font-size: 12px; margin-bottom: 0; }
 
@@ -63,13 +64,14 @@
             .header { padding: 14px 20px; flex-direction: column; gap: 10px; }
             .hero h2 { font-size: 26px; }
             .perfiles-grid { grid-template-columns: 1fr; }
+            .banner-externo { flex-direction: column; align-items: center; text-align: center; }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <h1>ITM &mdash; Portal de empleabilidad</h1>
+        <h1>ITM - Bolsa de empleo</h1>
         <nav>
             <a href="/">Inicio</a>
             <a href="/pre-registro">Pre-registro</a>
@@ -79,7 +81,7 @@
 
     <section class="hero">
         <h2>Tu primer paso hacia nuevas oportunidades</h2>
-        <p>Registra tu información en el sistema de pre-registro del ITM y accede al Servicio Público de Empleo.</p>
+        <p>Realiza tu pre-registro institucional para que la Oficina de Egresados gestione tu información ante el Servicio Público de Empleo (SPE), la plataforma del Gobierno Nacional para la intermediación laboral. Este es el primer paso; una vez validado, continuarás el proceso directamente en el portal del SPE.</p>
         <a href="/pre-registro" class="btn-primary">Iniciar Pre-registro</a>
     </section>
 
@@ -101,12 +103,15 @@
                 <h4>Egresados</h4>
                 <p>Graduados de programas académicos del Instituto Tecnológico Metropolitano.</p>
             </div>
-            <div class="perfil-card externo">
-                <div class="perfil-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#633806" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                </div>
-                <h4>Usuarios externos</h4>
-                <p>Si no perteneces al ITM, serás orientado hacia los canales oficiales del Servicio Público de Empleo (SPE).</p>
+        </div>
+
+        <div class="banner-externo">
+            <div class="banner-externo-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#633806" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+            <div>
+                <h4>¿No perteneces al ITM?</h4>
+                <p>Puedes acceder directamente al Servicio Público de Empleo (SPE) para registrarte en su plataforma oficial de intermediación laboral.</p>
             </div>
         </div>
     </section>
@@ -154,7 +159,7 @@
                 <p>Solo necesitas tu documento de identidad, un correo electrónico válido y tu número de teléfono celular.</p>
             </div>
             <div class="faq-item">
-                <h4>¿Qué pasa si no pertenezco al ITM?</h4>
+                <h4>¿Si no pertenezco al ITM y ya diligencié el pre-registro, qué sucede?</h4>
                 <p>Recibirás una notificación por correo electrónico con la orientación hacia los canales oficiales del Servicio Público de Empleo para que puedas continuar tu proceso allí.</p>
             </div>
             <div class="faq-item">
