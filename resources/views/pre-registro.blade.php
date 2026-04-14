@@ -117,7 +117,7 @@
                     <div class="form-row">
                         <div class="form-group full">
                             <label>Tipo de documento <span class="required">*</span></label>
-                            <select name="tipo_documento" required>
+                            <select name="tipo_documento" oninvalid="this.setCustomValidity('Seleccione un tipo de documento')" oninput="this.setCustomValidity('')" required>
                                 <option value="">Seleccione...</option>
                                 <option value="cedula_ciudadania" {{ old('tipo_documento') == 'cedula_ciudadania' ? 'selected' : '' }}>Cédula de ciudadanía</option>
                                 <option value="tarjeta_identidad" {{ old('tipo_documento') == 'tarjeta_identidad' ? 'selected' : '' }}>Tarjeta de identidad</option>
@@ -129,12 +129,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Número de documento <span class="required">*</span></label>
-                            <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" required>
+                            <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
                             @error('numero_documento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Confirmar número de documento <span class="required">*</span></label>
-                            <input type="text" name="confirmar_documento" value="{{ old('confirmar_documento') }}" required>
+                            <input type="text" name="confirmar_documento" value="{{ old('confirmar_documento') }}" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
                             @error('confirmar_documento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -145,19 +145,19 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Correo electrónico <span class="required">*</span></label>
-                            <input type="email" name="correo" value="{{ old('correo') }}" required>
+                            <input type="email" name="correo" value="{{ old('correo') }}" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
                             @error('correo') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Confirmar correo electrónico <span class="required">*</span></label>
-                            <input type="email" name="confirmar_correo" value="{{ old('confirmar_correo') }}" required>
+                            <input type="email" name="confirmar_correo" value="{{ old('confirmar_correo') }}" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
                             @error('confirmar_correo') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Teléfono celular <span class="required">*</span></label>
-                            <input type="text" name="telefono_celular" value="{{ old('telefono_celular') }}" required>
+                            <input type="text" name="telefono_celular" value="{{ old('telefono_celular') }}" pattern="[0-9]{10}" minlength="10" maxlength="10" oninvalid="this.setCustomValidity('El teléfono celular debe tener exactamente 10 dígitos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
                             @error('telefono_celular') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -168,34 +168,34 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Primer nombre <span class="required">*</span></label>
-                            <input type="text" name="primer_nombre" value="{{ old('primer_nombre') }}" required>
+                            <input type="text" name="primer_nombre" value="{{ old('primer_nombre') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El nombre solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" required>
                             @error('primer_nombre') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Segundo nombre</label>
-                            <input type="text" name="segundo_nombre" value="{{ old('segundo_nombre') }}">
+                            <input type="text" name="segundo_nombre" value="{{ old('segundo_nombre') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El nombre solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Primer apellido <span class="required">*</span></label>
-                            <input type="text" name="primer_apellido" value="{{ old('primer_apellido') }}" required>
+                            <input type="text" name="primer_apellido" value="{{ old('primer_apellido') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El apellido solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" required>
                             @error('primer_apellido') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Segundo apellido</label>
-                            <input type="text" name="segundo_apellido" value="{{ old('segundo_apellido') }}">
+                            <input type="text" name="segundo_apellido" value="{{ old('segundo_apellido') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El apellido solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Fecha de nacimiento <span class="required">*</span></label>
-                            <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
+                            <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" oninvalid="this.setCustomValidity('Seleccione su fecha de nacimiento')" oninput="this.setCustomValidity('')" required>
                             @error('fecha_nacimiento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Sexo <span class="required">*</span></label>
-                            <select name="sexo" required>
+                            <select name="sexo" oninvalid="this.setCustomValidity('Seleccione su sexo')" oninput="this.setCustomValidity('')" required>
                                 <option value="">Seleccione...</option>
                                 <option value="masculino" {{ old('sexo') == 'masculino' ? 'selected' : '' }}>Masculino</option>
                                 <option value="femenino" {{ old('sexo') == 'femenino' ? 'selected' : '' }}>Femenino</option>
@@ -210,19 +210,19 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>País de residencia <span class="required">*</span></label>
-                            <input type="text" name="pais" value="{{ old('pais', 'Colombia') }}" required>
+                            <input type="text" name="pais" value="{{ old('pais', 'Colombia') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El país solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" required>
                             @error('pais') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Departamento <span class="required">*</span></label>
-                            <input type="text" name="departamento" value="{{ old('departamento') }}" required>
+                            <input type="text" name="departamento" value="{{ old('departamento') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El departamento solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" required>
                             @error('departamento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Municipio <span class="required">*</span></label>
-                            <input type="text" name="municipio" value="{{ old('municipio') }}" required>
+                            <input type="text" name="municipio" value="{{ old('municipio') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+" oninvalid="this.setCustomValidity('El municipio solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')" required>
                             @error('municipio') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -233,7 +233,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Pregunta de seguridad <span class="required">*</span></label>
-                            <select name="pregunta_seguridad_id" required>
+                            <select name="pregunta_seguridad_id" oninvalid="this.setCustomValidity('Seleccione una pregunta de seguridad')" oninput="this.setCustomValidity('')" required>
                                 <option value="">Seleccione...</option>
                                 @foreach($preguntas as $pregunta)
                                     <option value="{{ $pregunta->id }}" {{ old('pregunta_seguridad_id') == $pregunta->id ? 'selected' : '' }}>{{ $pregunta->pregunta }}</option>
@@ -243,7 +243,7 @@
                         </div>
                         <div class="form-group">
                             <label>Respuesta de seguridad <span class="required">*</span></label>
-                            <input type="text" name="respuesta_seguridad" value="{{ old('respuesta_seguridad') }}" required>
+                            <input type="text" name="respuesta_seguridad" value="{{ old('respuesta_seguridad') }}" oninvalid="this.setCustomValidity('Ingrese su respuesta de seguridad')" oninput="this.setCustomValidity('')" required>
                             @error('respuesta_seguridad') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -252,7 +252,7 @@
                 <div class="form-section">
                     <h3>Tratamiento de datos personales</h3>
                     <div class="checkbox-group">
-                        <input type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" {{ old('acepta_terminos') ? 'checked' : '' }}>
+                        <input type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" oninvalid="this.setCustomValidity('Debe aceptar el tratamiento de datos personales')" oninput="this.setCustomValidity('')" {{ old('acepta_terminos') ? 'checked' : '' }}>
                         <label for="acepta_terminos">
                             Autorizo al Instituto Tecnológico Metropolitano (ITM) para el tratamiento de mis datos personales,
                             de conformidad con la Ley 1581 de 2012 y su Decreto Reglamentario 1377 de 2013, para los fines
