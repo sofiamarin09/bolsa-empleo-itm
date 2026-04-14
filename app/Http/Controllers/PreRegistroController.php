@@ -19,24 +19,29 @@ class PreRegistroController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'correo' => strtolower($request->correo),
+            'confirmar_correo' => strtolower($request->confirmar_correo),
+        ]);
+
         $request->validate([
             'tipo_documento' => 'required|in:cedula_ciudadania,tarjeta_identidad,documento_nacional',
             'numero_documento' => 'required|regex:/^[0-9]+$/|min:6|max:15|unique:usuarios_aspirantes,numero_documento',
             'confirmar_documento' => 'required|same:numero_documento',
             'correo' => 'required|email|max:150|unique:usuarios_aspirantes,correo',
             'confirmar_correo' => 'required|same:correo',
-            'primer_nombre' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'segundo_nombre' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'primer_apellido' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'segundo_apellido' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'fecha_nacimiento' => 'required|date|before:today',
+            'primer_nombre' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'segundo_nombre' => ['nullable', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'primer_apellido' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'segundo_apellido' => ['nullable', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'fecha_nacimiento' => 'required|date|before:-14 years|after:-100 years',
             'sexo' => 'required|in:masculino,femenino',
-            'telefono_celular' => 'required|regex:/^[0-9]{10}$/',
-            'pais' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'departamento' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
-            'municipio' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/'],
+            'telefono_celular' => 'required|regex:/^3[0-9]{9}$/',
+            'pais' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'departamento' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'municipio' => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
             'pregunta_seguridad_id' => 'required|exists:preguntas_seguridad,id',
-            'respuesta_seguridad' => 'required|string|max:255',
+            'respuesta_seguridad' => 'required|string|min:3|max:255',
             'acepta_terminos' => 'accepted',
         ], [
             'numero_documento.unique' => 'Este número de documento ya está registrado.',
@@ -47,17 +52,23 @@ class PreRegistroController extends Controller
             'correo.unique' => 'Este correo electrónico ya está registrado.',
             'confirmar_correo.same' => 'Los correos electrónicos no coinciden.',
             'acepta_terminos.accepted' => 'Debe aceptar el tratamiento de datos personales.',
-            'fecha_nacimiento.before' => 'La fecha de nacimiento debe ser anterior a hoy.',
+            'fecha_nacimiento.before' => 'Debe tener al menos 14 años para registrarse.',
+            'fecha_nacimiento.after' => 'La fecha de nacimiento no es válida.',
             'tipo_documento.in' => 'Seleccione un tipo de documento válido.',
             'sexo.in' => 'Seleccione un sexo válido.',
-            'telefono_celular.regex' => 'El teléfono celular debe tener exactamente 10 números.',
+            'telefono_celular.regex' => 'El teléfono celular debe tener 10 dígitos y comenzar con 3.',
             'primer_nombre.regex' => 'El primer nombre solo debe contener letras.',
+            'primer_nombre.min' => 'El primer nombre debe tener mínimo 2 caracteres.',
             'segundo_nombre.regex' => 'El segundo nombre solo debe contener letras.',
+            'segundo_nombre.min' => 'El segundo nombre debe tener mínimo 2 caracteres.',
             'primer_apellido.regex' => 'El primer apellido solo debe contener letras.',
+            'primer_apellido.min' => 'El primer apellido debe tener mínimo 2 caracteres.',
             'segundo_apellido.regex' => 'El segundo apellido solo debe contener letras.',
+            'segundo_apellido.min' => 'El segundo apellido debe tener mínimo 2 caracteres.',
             'pais.regex' => 'El país solo debe contener letras.',
             'departamento.regex' => 'El departamento solo debe contener letras.',
             'municipio.regex' => 'El municipio solo debe contener letras.',
+            'respuesta_seguridad.min' => 'La respuesta de seguridad debe tener mínimo 3 caracteres.',
         ]);
 
         try {
