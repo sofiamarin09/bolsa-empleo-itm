@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UsuarioAspirante;
 use App\Models\PreguntaSeguridad;
 use App\Models\RegistroAuditoria;
+use App\Services\ValidacionAcademicaService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -102,9 +103,25 @@ class PreRegistroController extends Controller
                 'usuario_id' => $usuario->id,
             ]);
 
+            $nombreCompleto = trim($request->primer_nombre . ' ' . ($request->segundo_nombre ?? '') . ' ' . $request->primer_apellido . ' ' . ($request->segundo_apellido ?? ''));
+            $nombreCompleto = preg_replace('/\s+/', ' ', $nombreCompleto);
+
+            $servicio = new ValidacionAcademicaService();
+            $resultado = $servicio->validar($usuario->id, $request->numero_documento, $nombreCompleto, $request->ip());
+
+            if (!$resultado['valido']) {
+                DB::rollBack();
+                return back()->withInput()->withErrors(['error' => $resultado['detalle']]);
+            }
+
+            $usuario->update(['estado_academico' => $resultado['estado']]);
+
             DB::commit();
 
-            return redirect()->route('pre-registro.exito')->with('usuario_id', $usuario->id);
+            return redirect()->route('pre-registro.exito')->with([
+                'usuario_id' => $usuario->id,
+                'estado_academico' => $resultado['estado'],
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();

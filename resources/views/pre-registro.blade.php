@@ -126,12 +126,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Número de documento <span class="required">*</span></label>
-                            <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
+                            <input type="text" name="numero_documento" value="{{ old('numero_documento') }}" autocomplete="off" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
                             @error('numero_documento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Confirmar número de documento <span class="required">*</span></label>
-                            <input type="text" name="confirmar_documento" value="{{ old('confirmar_documento') }}" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" onpaste="return false" required>
+                            <input type="text" name="confirmar_documento" value="{{ old('confirmar_documento') }}" autocomplete="off" pattern="[0-9]+" minlength="6" maxlength="15" oninvalid="this.setCustomValidity('El número de documento debe tener entre 6 y 15 dígitos numéricos')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" onpaste="return false" required>
                             @error('confirmar_documento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -142,19 +142,19 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Correo electrónico <span class="required">*</span></label>
-                            <input type="email" name="correo" value="{{ old('correo') }}" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
+                            <input type="email" name="correo" value="{{ old('correo') }}" autocomplete="off" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
                             @error('correo') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Confirmar correo electrónico <span class="required">*</span></label>
-                            <input type="email" name="confirmar_correo" value="{{ old('confirmar_correo') }}" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" onpaste="return false" required>
+                            <input type="email" name="confirmar_correo" value="{{ old('confirmar_correo') }}" autocomplete="off" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" onpaste="return false" required>
                             @error('confirmar_correo') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Teléfono celular <span class="required">*</span></label>
-                            <input type="text" name="telefono_celular" value="{{ old('telefono_celular') }}" pattern="3[0-9]{9}" minlength="10" maxlength="10" oninvalid="this.setCustomValidity('El teléfono celular debe tener 10 dígitos y comenzar con 3')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
+                            <input type="text" name="telefono_celular" value="{{ old('telefono_celular') }}" autocomplete="off" pattern="3[0-9]{9}" minlength="10" maxlength="10" oninvalid="this.setCustomValidity('El teléfono celular debe tener 10 dígitos y comenzar con 3')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
                             @error('telefono_celular') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -165,23 +165,23 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Primer nombre <span class="required">*</span></label>
-                            <input type="text" name="primer_nombre" value="{{ old('primer_nombre') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
+                            <input type="text" name="primer_nombre" value="{{ old('primer_nombre') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
                             @error('primer_nombre') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Segundo nombre</label>
-                            <input type="text" name="segundo_nombre" value="{{ old('segundo_nombre') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]{2,}" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, ''); if(this.value.length === 1) this.setCustomValidity('El nombre debe tener mínimo 2 caracteres');">
+                            <input type="text" name="segundo_nombre" value="{{ old('segundo_nombre') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]{2,}" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, ''); if(this.value.length === 1) this.setCustomValidity('El nombre debe tener mínimo 2 caracteres');">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Primer apellido <span class="required">*</span></label>
-                            <input type="text" name="primer_apellido" value="{{ old('primer_apellido') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El apellido debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
+                            <input type="text" name="primer_apellido" value="{{ old('primer_apellido') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El apellido debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
                             @error('primer_apellido') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Segundo apellido</label>
-                            <input type="text" name="segundo_apellido" value="{{ old('segundo_apellido') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]{2,}" oninvalid="this.setCustomValidity('El apellido debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, ''); if(this.value.length === 1) this.setCustomValidity('El apellido debe tener mínimo 2 caracteres');">
+                            <input type="text" name="segundo_apellido" value="{{ old('segundo_apellido') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]{2,}" oninvalid="this.setCustomValidity('El apellido debe tener mínimo 2 caracteres y solo contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, ''); if(this.value.length === 1) this.setCustomValidity('El apellido debe tener mínimo 2 caracteres');">
                         </div>
                     </div>
                     <div class="form-row">
@@ -207,19 +207,19 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>País de residencia <span class="required">*</span></label>
-                            <input type="text" name="pais" value="{{ old('pais', 'Colombia') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El país solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
+                            <input type="text" name="pais" value="{{ old('pais', 'Colombia') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El país solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
                             @error('pais') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label>Departamento <span class="required">*</span></label>
-                            <input type="text" name="departamento" value="{{ old('departamento') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El departamento solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
+                            <input type="text" name="departamento" value="{{ old('departamento') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El departamento solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
                             @error('departamento') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Municipio <span class="required">*</span></label>
-                            <input type="text" name="municipio" value="{{ old('municipio') }}" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El municipio solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
+                            <input type="text" name="municipio" value="{{ old('municipio') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+" oninvalid="this.setCustomValidity('El municipio solo debe contener letras')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')" required>
                             @error('municipio') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -240,7 +240,7 @@
                         </div>
                         <div class="form-group">
                             <label>Respuesta de seguridad <span class="required">*</span></label>
-                            <input type="text" name="respuesta_seguridad" value="{{ old('respuesta_seguridad') }}" minlength="3" oninvalid="this.setCustomValidity('La respuesta de seguridad debe tener mínimo 3 caracteres')" oninput="this.setCustomValidity('')" required>
+                            <input type="text" name="respuesta_seguridad" value="{{ old('respuesta_seguridad') }}" autocomplete="off" minlength="3" oninvalid="this.setCustomValidity('La respuesta de seguridad debe tener mínimo 3 caracteres')" oninput="this.setCustomValidity('')" required>
                             @error('respuesta_seguridad') <span class="error-msg">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -268,6 +268,19 @@
         <p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
+
+    <script>
+    document.querySelectorAll('input:not([type="checkbox"]):not([type="date"])').forEach(function(input) {
+        input.setAttribute('autocomplete', 'one-time-code');
+        input.setAttribute('readonly', true);
+        input.addEventListener('focus', function() {
+            this.removeAttribute('readonly');
+        });
+    });
+    document.querySelectorAll('select').forEach(function(select) {
+        select.setAttribute('autocomplete', 'one-time-code');
+    });
+    </script>
 
 </body>
 </html>
