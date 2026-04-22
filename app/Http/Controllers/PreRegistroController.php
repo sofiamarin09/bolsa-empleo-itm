@@ -9,6 +9,7 @@ use App\Models\RegistroAuditoria;
 use App\Services\ValidacionAcademicaService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Services\NotificacionService;
 
 class PreRegistroController extends Controller
 {
@@ -115,6 +116,8 @@ class PreRegistroController extends Controller
             }
 
             $usuario->update(['estado_academico' => $resultado['estado']]);
+            $notificacionService = new NotificacionService();
+            $notificacionService->notificar($usuario, $request->ip());
 
             DB::commit();
 
