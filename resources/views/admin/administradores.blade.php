@@ -151,24 +151,26 @@
                 <h3>Crear nuevo administrador</h3>
                 <form method="POST" action="{{ route('admin.administradores.crear') }}" autocomplete="off">
                     @csrf
+                    <input type="text" name="fake_user" style="display:none;" aria-hidden="true">
+                    <input type="password" name="fake_pass" style="display:none;" aria-hidden="true">
                     <div class="form-group">
                         <label>Nombre completo <span class="required">*</span></label>
-                        <input type="text" name="nombre" value="{{ old('nombre') }}" autocomplete="off" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras y números')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]/g, '')" required>
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" autocomplete="one-time-code" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]+" minlength="2" oninvalid="this.setCustomValidity('El nombre debe tener mínimo 2 caracteres y solo contener letras y números')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]/g, '')" required>
                         @error('nombre') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label>Correo electrónico <span class="required">*</span></label>
-                        <input type="email" name="correo" value="{{ old('correo') }}" autocomplete="off" oninvalid="this.setCustomValidity('Ingrese un correo válido')" oninput="this.setCustomValidity('')" required>
+                        <input type="text" name="correo" value="{{ old('correo') }}" autocomplete="one-time-code" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
                         @error('correo') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label>Contraseña <span class="required">*</span></label>
-                        <input type="password" name="password" autocomplete="new-password" minlength="8" oninvalid="this.setCustomValidity('La contraseña debe tener mínimo 8 caracteres')" oninput="this.setCustomValidity('')" required>
+                        <input type="password" name="password" autocomplete="one-time-code" minlength="8" oninvalid="this.setCustomValidity('La contraseña debe tener mínimo 8 caracteres')" oninput="this.setCustomValidity('')" required>
                         @error('password') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label>Confirmar contraseña <span class="required">*</span></label>
-                        <input type="password" name="password_confirmation" autocomplete="new-password" minlength="8" oninvalid="this.setCustomValidity('Confirme la contraseña')" oninput="this.setCustomValidity('')" onpaste="return false" required>
+                        <input type="password" name="password_confirmation" autocomplete="one-time-code" minlength="8" oninvalid="this.setCustomValidity('Confirme la contraseña')" oninput="this.setCustomValidity('')" onpaste="return false" required>
                         @error('password_confirmation') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <button type="submit" class="btn-crear">Crear administrador</button>
@@ -190,7 +192,7 @@
                             <p>{{ $admin->correo }}</p>
                             <p class="fecha">Creado: {{ $admin->created_at ? $admin->created_at->format('d/m/Y H:i') : 'N/A' }}</p>
                         </div>
-                        @if($admin->id !== $adminActualId)
+                        @if($admin->id !== $adminActualId && $admin->id !== 1)
                         <form method="POST" action="{{ route('admin.administradores.eliminar', $admin->id) }}" onsubmit="return confirm('¿Está seguro de eliminar a {{ $admin->nombre }}?');">
                             @csrf
                             @method('DELETE')
@@ -214,7 +216,7 @@
     </footer>
 
     <script>
-    document.querySelectorAll('input:not([type="checkbox"]):not([type="date"])').forEach(function(input) {
+    document.querySelectorAll('input:not([type="checkbox"]):not([type="date"]):not([style*="display:none"])').forEach(function(input) {
         input.setAttribute('readonly', true);
         input.addEventListener('focus', function() {
             this.removeAttribute('readonly');

@@ -102,7 +102,12 @@ class AdminController extends Controller
             return redirect()->route('admin.administradores')->withErrors(['error' => 'No puede eliminarse a sí mismo.']);
         }
 
+        if ($id == 1) {
+            return redirect()->route('admin.administradores')->withErrors(['error' => 'El administrador principal no puede ser eliminado.']);
+        }
+
         $admin = Administrador::findOrFail($id);
+        RegistroAuditoria::where('administrador_id', $id)->update(['administrador_id' => null]);
         $nombreAdmin = $admin->nombre;
         $correoAdmin = $admin->correo;
         $admin->delete();
