@@ -19,6 +19,10 @@ class Administrador extends Model
         'password_hash',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function auditorias()
     {
         return $this->hasMany(RegistroAuditoria::class, 'administrador_id');
