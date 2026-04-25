@@ -8,6 +8,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\AdminController;
 
+Route::get('/admin/usuarios', [AdminController::class, 'listarUsuarios'])->name('admin.usuarios');
+Route::get('/admin/usuarios/{id}', [AdminController::class, 'verUsuario'])->name('admin.usuario.detalle');
+Route::get('/admin/graficas', [AdminController::class, 'graficas'])->name('admin.graficas');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/admin/login', [AdminLoginController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
@@ -23,9 +26,13 @@ Route::get('/exportar-excel', function (Illuminate\Http\Request $request) {
     $estado = $request->query('estado');
     $fechaDesde = $request->query('fecha_desde');
     $fechaHasta = $request->query('fecha_hasta');
-
+ 
+    if (is_array($estado)) {
+        $estado = implode(',', $estado);
+    }
+ 
     $nombreArchivo = 'usuarios_itm_' . date('Y-m-d_His') . '.xlsx';
-
+ 
     return Excel::download(
         new UsuariosExport($estado, $fechaDesde, $fechaHasta),
         $nombreArchivo

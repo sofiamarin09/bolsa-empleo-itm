@@ -28,7 +28,8 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         $query = UsuarioAspirante::query();
 
         if ($this->estado) {
-            $query->where('estado_academico', $this->estado);
+            $estados = explode(',', $this->estado);
+            $query->whereIn('estado_academico', $estados);
         }
 
         if ($this->fechaDesde) {

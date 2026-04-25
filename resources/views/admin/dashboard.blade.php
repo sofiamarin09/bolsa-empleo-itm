@@ -91,10 +91,10 @@
         </div>
 
         <div class="nav-links">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link active">Dashboard</a>
-            <a href="#" class="nav-link">Usuarios</a>
-            <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
-            <a href="{{ route('exportar.excel') }}" class="nav-link">Exportar Excel</a>
+        <a href="{{ route('admin.dashboard') }}" class="nav-link active">Dashboard</a>
+        <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
+        <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
+        <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
         </div>
 
         <h3 class="section-title">Estadísticas de registro</h3>
