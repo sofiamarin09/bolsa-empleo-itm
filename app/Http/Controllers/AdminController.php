@@ -308,6 +308,18 @@ class AdminController extends Controller
             ->take(5)
 
             ->get();
+
+        $notifEnviadasPorMes = Notificacion::where('estado_envio', 'enviado')
+            ->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->get();
+ 
+        $notifFallidasPorMes = Notificacion::where('estado_envio', 'fallido')
+            ->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->get();
  
         return view('admin.graficas', compact(
 
@@ -323,7 +335,11 @@ class AdminController extends Controller
 
             'registrosPorMes',
 
-            'departamentos'
+            'departamentos',
+
+            'notifEnviadasPorMes',
+
+            'notifFallidasPorMes'
 
         ));
 
