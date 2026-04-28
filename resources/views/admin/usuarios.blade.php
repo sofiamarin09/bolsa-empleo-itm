@@ -205,7 +205,7 @@
 <div class="filtros-actions">
 <button type="submit" class="btn-buscar">Buscar</button>
 <a href="{{ route('admin.usuarios') }}" class="btn-limpiar">Limpiar filtros</a>
-<a href="{{ route('exportar.excel', request()->query()) }}" class="btn-excel">Exportar Excel</a>
+<a href="#" class="btn-excel" onclick="exportarExcel()">Exportar Excel</a>
 </div>
 </form>
 </div>
@@ -303,6 +303,47 @@
 <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
 </footer>
  
+<script>
+function exportarExcel() {
+    var params = new URLSearchParams(window.location.search);
+    var url = '{{ route("exportar.excel") }}?' + params.toString();
+    window.location.href = url;
+}
+</script>
+
+<script>
+var tiempoInactividad;
+function reiniciarTemporizador() {
+    clearTimeout(tiempoInactividad);
+    tiempoInactividad = setTimeout(function() {
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+        var modal = document.createElement('div');
+        modal.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
+        modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    }, 900000);
+}
+function cerrarSesion() {
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ route("admin.logout") }}';
+    var csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = '_token';
+    csrf.value = '{{ csrf_token() }}';
+    form.appendChild(csrf);
+    document.body.appendChild(form);
+    form.submit();
+}
+document.addEventListener('mousemove', reiniciarTemporizador);
+document.addEventListener('keypress', reiniciarTemporizador);
+document.addEventListener('click', reiniciarTemporizador);
+document.addEventListener('scroll', reiniciarTemporizador);
+reiniciarTemporizador();
+</script>
+
 </body>
 </html>
  

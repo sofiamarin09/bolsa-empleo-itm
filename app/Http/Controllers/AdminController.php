@@ -271,78 +271,90 @@ class AdminController extends Controller
 
     }
  
-    public function graficas()
-
+    public function graficas(Request $request)
     {
-
         if (!Session::has('admin_id')) {
-
             return redirect()->route('admin.login');
-
         }
- 
-        $estudiantesActivos = UsuarioAspirante::where('estado_academico', 'estudiante_activo')->count();
 
-        $egresados = UsuarioAspirante::where('estado_academico', 'egresado')->count();
+        $query = UsuarioAspirante::query();
 
-        $externos = UsuarioAspirante::where('estado_academico', 'externo')->count();
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('created_at', '>=', $request->fecha_desde);
+        }
+        if ($request->filled('fecha_hasta')) {
+            $query->whereDate('created_at', '<=', $request->fecha_hasta);
+        }
+        if ($request->filled('estado')) {
+            $query->where('estado_academico', $request->estado);
+        }
+        if ($request->filled('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+        if ($request->filled('tipo_documento')) {
+            $query->where('tipo_documento', $request->tipo_documento);
+        }
+        if ($request->filled('pais')) {
+            $query->where('pais', 'ilike', '%' . $request->pais . '%');
+        }
+        if ($request->filled('departamento')) {
+            $query->where('departamento', 'ilike', '%' . $request->departamento . '%');
+        }
+        if ($request->filled('municipio')) {
+            $query->where('municipio', 'ilike', '%' . $request->municipio . '%');
+        }
 
-        $pendientes = UsuarioAspirante::where('estado_academico', 'pendiente')->count();
+        $usuarioIds = $query->pluck('id');
 
+        $estudiantesActivos = (clone $query)->where('estado_academico', 'estudiante_activo')->count();
+        $egresados = (clone $query)->where('estado_academico', 'egresado')->count();
+        $externos = (clone $query)->where('estado_academico', 'externo')->count();
+        $pendientes = (clone $query)->where('estado_academico', 'pendiente')->count();
         $totalRegistros = $estudiantesActivos + $egresados + $externos + $pendientes;
- 
-        $registrosPorMes = UsuarioAspirante::selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
 
+        $registrosPorMes = (clone $query)->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
             ->groupBy('mes')
-
             ->orderBy('mes')
-
-            ->get();
- 
-        $departamentos = UsuarioAspirante::selectRaw("departamento, COUNT(*) as total")
-
-            ->groupBy('departamento')
-
-            ->orderByDesc('total')
-
-            ->take(5)
-
             ->get();
 
-        $notifEnviadasPorMes = Notificacion::where('estado_envio', 'enviado')
+        $notifQuery = Notificacion::whereIn('usuario_id', $usuarioIds);
+
+        if ($request->filled('notificacion')) {
+            $notifQuery->where('estado_envio', $request->notificacion);
+        }
+
+        $notifEnviadasPorMes = (clone $notifQuery)->where('estado_envio', 'enviado')
             ->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
             ->groupBy('mes')
             ->orderBy('mes')
             ->get();
- 
-        $notifFallidasPorMes = Notificacion::where('estado_envio', 'fallido')
+
+        $notifFallidasPorMes = (clone $notifQuery)->where('estado_envio', 'fallido')
             ->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
             ->groupBy('mes')
             ->orderBy('mes')
             ->get();
- 
+
+        $validacionQuery = ValidacionAcademica::whereIn('usuario_id', $usuarioIds);
+
+        $validadosItm = (clone $validacionQuery)->whereIn('resultado', ['estudiante_activo', 'egresado'])->count();
+        $noPertenece = (clone $validacionQuery)->where('resultado', 'externo')->count();
+        $pendientesVal = $totalRegistros - $validadosItm - $noPertenece;
+        if ($pendientesVal < 0) $pendientesVal = 0;
+
         return view('admin.graficas', compact(
-
             'estudiantesActivos',
-
             'egresados',
-
             'externos',
-
             'pendientes',
-
             'totalRegistros',
-
             'registrosPorMes',
-
-            'departamentos',
-
             'notifEnviadasPorMes',
-
-            'notifFallidasPorMes'
-
+            'notifFallidasPorMes',
+            'validadosItm',
+            'noPertenece',
+            'pendientesVal'
         ));
-
     }
 
 }
