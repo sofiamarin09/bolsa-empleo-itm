@@ -99,7 +99,8 @@
                     </div>
                     <div class="filtro-group">
                         <label>Fecha hasta</label>
-                        <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}">
+                        <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" max="{{ date('Y-m-d') }}">
+                        
                     </div>
                     <div class="filtro-group">
                         <label>Estado académico</label>
@@ -132,15 +133,15 @@
                     </div>
                     <div class="filtro-group">
                         <label>País</label>
-                        <input type="text" name="pais" value="{{ request('pais') }}" placeholder="Todos">
+                        <input type="text" name="pais" value="{{ request('pais') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
                     </div>
                     <div class="filtro-group">
                         <label>Departamento</label>
-                        <input type="text" name="departamento" value="{{ request('departamento') }}" placeholder="Todos">
+                        <input type="text" name="departamento" value="{{ request('departamento') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
                     </div>
                     <div class="filtro-group">
                         <label>Municipio</label>
-                        <input type="text" name="municipio" value="{{ request('municipio') }}" placeholder="Todos">
+                        <input type="text" name="municipio" value="{{ request('municipio') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
                     </div>
                 </div>
                 <div class="filtros-grid">
@@ -397,6 +398,15 @@
                 }
             }
         }
+    });
+    </script>
+
+    <script>
+    document.querySelectorAll('.filtros-card input[type="text"]').forEach(function(input) {
+        input.setAttribute('readonly', true);
+        input.addEventListener('focus', function() {
+            this.removeAttribute('readonly');
+        });
     });
     </script>
 
