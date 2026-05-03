@@ -285,4 +285,3 @@ class PreRegistroController extends Controller
     }
 
 }
- 

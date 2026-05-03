@@ -124,14 +124,29 @@ class AdminController extends Controller
         }
 
         if ($request->filled('busqueda')) {
+
             $busqueda = $request->busqueda;
+
             $query->where(function ($q) use ($busqueda) {
+
                 $q->where('primer_nombre', 'ilike', "%{$busqueda}%")
+
                   ->orWhere('primer_apellido', 'ilike', "%{$busqueda}%")
+
                   ->orWhere('numero_documento', 'ilike', "%{$busqueda}%")
-                  ->orWhere('correo', 'ilike', "%{$busqueda}%");
+
+                  ->orWhere('correo', 'ilike', "%{$busqueda}%")
+
+                  ->orWhereRaw("CONCAT(primer_nombre, ' ', primer_apellido) ilike ?", ["%{$busqueda}%"])
+
+                  ->orWhereRaw("CONCAT(primer_nombre, ' ', segundo_apellido) ilike ?", ["%{$busqueda}%"])
+
+                  ->orWhereRaw("CONCAT(primer_nombre, ' ', segundo_nombre, ' ', primer_apellido, ' ', segundo_apellido) ilike ?", ["%{$busqueda}%"]);
+
             });
+
         }
+ 
 
         if ($request->filled('estado')) {
             $estados = is_array($request->estado) ? $request->estado : [$request->estado];
