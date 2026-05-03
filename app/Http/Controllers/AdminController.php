@@ -110,6 +110,19 @@ class AdminController extends Controller
     {
         $query = UsuarioAspirante::query();
 
+        if ($request->filled('pais')) {
+            $pais = preg_replace('/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/', '', $request->pais);
+            $query->where('pais', 'ilike', '%' . $pais . '%');
+        }
+        if ($request->filled('departamento')) {
+            $departamento = preg_replace('/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/', '', $request->departamento);
+            $query->where('departamento', 'ilike', '%' . $departamento . '%');
+        }
+        if ($request->filled('municipio')) {
+            $municipio = preg_replace('/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/', '', $request->municipio);
+            $query->where('municipio', 'ilike', '%' . $municipio . '%');
+        }
+
         if ($request->filled('busqueda')) {
             $busqueda = $request->busqueda;
             $query->where(function ($q) use ($busqueda) {
