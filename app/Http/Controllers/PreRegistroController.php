@@ -70,11 +70,11 @@ class PreRegistroController extends Controller
 
             'telefono_celular' => 'required|string|size:10|regex:/^3[0-9]{9}$/',
 
-            'pais' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'pais' => 'required|string|min:2|max:100',
 
-            'departamento' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'departamento' => 'nullable|string|min:2|max:100',
 
-            'municipio' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
+            'municipio' => 'nullable|string|min:2|max:100',
 
             'pregunta_seguridad_id' => 'required|exists:preguntas_seguridad,id',
 
@@ -177,7 +177,21 @@ class PreRegistroController extends Controller
             'acepta_terminos.accepted' => 'Debe aceptar el tratamiento de datos personales.',
 
         ]);
- 
+
+        if ($request->pais === 'Colombia') {
+            if (!$request->filled('departamento')) {
+                return back()->withInput()->withErrors(['departamento' => 'El departamento es obligatorio para Colombia.']);
+            }
+            if (!$request->filled('municipio')) {
+                return back()->withInput()->withErrors(['municipio' => 'El municipio es obligatorio para Colombia.']);
+            }
+        } else {
+            $request->merge([
+                'departamento' => null,
+                'municipio' => null,
+            ]);
+        }
+
         try {
 
             DB::beginTransaction();

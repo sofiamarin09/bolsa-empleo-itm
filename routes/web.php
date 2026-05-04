@@ -14,9 +14,29 @@ Route::get('/pre-registro', [PreRegistroController::class, 'create'])->name('pre
 Route::post('/pre-registro', [PreRegistroController::class, 'store'])->name('pre-registro.store');
 Route::get('/pre-registro/exito', [PreRegistroController::class, 'exito'])->name('pre-registro.exito');
 
+Route::get('/api/departamentos/{pais_id}', function ($pais_id) {
+    $departamentos = \App\Models\Departamento::where('pais_id', $pais_id)
+        ->orderBy('nombre')
+        ->get(['id', 'nombre']);
+    return response()->json($departamentos);
+});
+ 
+Route::get('/api/municipios/{departamento_id}', function ($departamento_id) {
+    $municipios = \App\Models\Municipio::where('departamento_id', $departamento_id)
+        ->orderBy('nombre')
+        ->get(['id', 'nombre']);
+    return response()->json($municipios);
+});
+ 
+Route::get('/api/paises', function () {
+    $paises = \App\Models\Pais::orderBy('nombre')->get(['id', 'nombre']);
+    return response()->json($paises);
+});
+
 Route::get('/admin/login', [AdminLoginController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
 
 Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
