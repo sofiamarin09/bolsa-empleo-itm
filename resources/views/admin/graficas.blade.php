@@ -133,15 +133,21 @@
                     </div>
                     <div class="filtro-group">
                         <label>País</label>
-                        <input type="text" name="pais" value="{{ request('pais') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
+                        <select id="filtro-pais" name="pais" onchange="filtrarPais(this.value)">
+                            <option value="">Todos</option>
+                        </select>
                     </div>
                     <div class="filtro-group">
                         <label>Departamento</label>
-                        <input type="text" name="departamento" value="{{ request('departamento') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
+                        <select id="filtro-departamento" name="departamento" onchange="filtrarDepartamento(this.value)">
+                            <option value="">Todos</option>
+                        </select>
                     </div>
                     <div class="filtro-group">
                         <label>Municipio</label>
-                        <input type="text" name="municipio" value="{{ request('municipio') }}" placeholder="Todos" autocomplete="one-time-code" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]/g, '')">
+                        <select id="filtro-municipio" name="municipio">
+                            <option value="">Todos</option>
+                        </select>
                     </div>
                 </div>
                 <div class="filtros-grid">
@@ -409,6 +415,75 @@
         });
     });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/paises')
+        .then(function(r) { return r.json(); })
+        .then(function(paises) {
+            var sel = document.getElementById('filtro-pais');
+            paises.forEach(function(p) {
+                var opt = document.createElement('option');
+                opt.value = p.nombre;
+                opt.textContent = p.nombre;
+                opt.setAttribute('data-id', p.id);
+                if (p.nombre === '{{ request("pais") }}') opt.selected = true;
+                sel.appendChild(opt);
+            });
+            var paisActual = '{{ request("pais") }}';
+            if (paisActual) filtrarPais(paisActual);
+        });
+});
+
+function filtrarPais(paisNombre) {
+    var sel = document.getElementById('filtro-pais');
+    var selDep = document.getElementById('filtro-departamento');
+    var selMun = document.getElementById('filtro-municipio');
+    selDep.innerHTML = '<option value="">Todos</option>';
+    selMun.innerHTML = '<option value="">Todos</option>';
+
+    if (paisNombre === 'Colombia') {
+        var opt = sel.options[sel.selectedIndex];
+        var paisId = opt.getAttribute('data-id');
+        fetch('/api/departamentos/' + paisId)
+            .then(function(r) { return r.json(); })
+            .then(function(deps) {
+                deps.forEach(function(d) {
+                    var o = document.createElement('option');
+                    o.value = d.nombre;
+                    o.textContent = d.nombre;
+                    o.setAttribute('data-id', d.id);
+                    if (d.nombre === '{{ request("departamento") }}') o.selected = true;
+                    selDep.appendChild(o);
+                });
+                var depActual = '{{ request("departamento") }}';
+                if (depActual) filtrarDepartamento(depActual);
+            });
+    }
+}
+
+function filtrarDepartamento(depNombre) {
+    var selDep = document.getElementById('filtro-departamento');
+    var selMun = document.getElementById('filtro-municipio');
+    selMun.innerHTML = '<option value="">Todos</option>';
+
+    if (depNombre) {
+        var opt = selDep.options[selDep.selectedIndex];
+        var depId = opt.getAttribute('data-id');
+        fetch('/api/municipios/' + depId)
+            .then(function(r) { return r.json(); })
+            .then(function(muns) {
+                muns.forEach(function(m) {
+                    var o = document.createElement('option');
+                    o.value = m.nombre;
+                    o.textContent = m.nombre;
+                    if (m.nombre === '{{ request("municipio") }}') o.selected = true;
+                    selMun.appendChild(o);
+                });
+            });
+    }
+}
+</script>
 
     <script>
     var tiempoInactividad;
