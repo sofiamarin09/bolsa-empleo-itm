@@ -25,15 +25,9 @@ class UsuarioAspirante extends Model
         'pais',
         'departamento',
         'municipio',
-        'pregunta_seguridad_id',
-        'respuesta_seguridad_hash',
         'estado_academico',
         'acepta_terminos',
         'fecha_aceptacion_terminos',
-    ];
-
-    protected $hidden = [
-        'respuesta_seguridad_hash',
     ];
 
     protected $casts = [
@@ -41,11 +35,6 @@ class UsuarioAspirante extends Model
         'acepta_terminos' => 'boolean',
         'fecha_aceptacion_terminos' => 'datetime',
     ];
-
-    public function preguntaSeguridad()
-    {
-        return $this->belongsTo(PreguntaSeguridad::class, 'pregunta_seguridad_id');
-    }
 
     public function validaciones()
     {

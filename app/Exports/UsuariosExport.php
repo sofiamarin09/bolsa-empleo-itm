@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use App\Models\UsuarioAspirante;
-use App\Models\PreguntaSeguridad;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -40,7 +39,7 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $query->whereDate('created_at', '<=', $this->fechaHasta);
         }
 
-        return $query->with('preguntaSeguridad')->orderBy('created_at', 'desc');
+        return $query->orderBy('created_at', 'desc');
     }
 
     public function headings(): array
@@ -60,7 +59,6 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             'País',
             'Departamento',
             'Municipio',
-            'Pregunta de seguridad',
             'Estado académico',
             'Fecha de registro',
         ];
@@ -81,9 +79,8 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $usuario->fecha_nacimiento->format('d/m/Y'),
             ucfirst($usuario->sexo),
             $usuario->pais,
-            $usuario->departamento,
-            $usuario->municipio,
-            $usuario->preguntaSeguridad->pregunta ?? '',
+            $usuario->departamento ?? '',
+            $usuario->municipio ?? '',
             $this->formatoEstado($usuario->estado_academico),
             $usuario->created_at->format('d/m/Y H:i'),
         ];

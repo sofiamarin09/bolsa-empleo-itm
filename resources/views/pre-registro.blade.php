@@ -240,27 +240,6 @@
 </div>
  
                 <div class="form-section">
-<h3>Pregunta de seguridad</h3>
-<div class="form-row">
-<div class="form-group">
-<label>Pregunta de seguridad <span class="required">*</span></label>
-<select name="pregunta_seguridad_id" oninvalid="this.setCustomValidity('Seleccione una pregunta de seguridad')" oninput="this.setCustomValidity('')" required>
-<option value="">Seleccione...</option>
-                                @foreach($preguntas as $pregunta)
-<option value="{{ $pregunta->id }}" {{ old('pregunta_seguridad_id') == $pregunta->id ? 'selected' : '' }}>{{ $pregunta->pregunta }}</option>
-                                @endforeach
-</select>
-                            @error('pregunta_seguridad_id') <span class="error-msg">{{ $message }}</span> @enderror
-</div>
-<div class="form-group">
-<label>Respuesta de seguridad <span class="required">*</span></label>
-<input type="text" name="respuesta_seguridad" value="{{ old('respuesta_seguridad') }}" autocomplete="off" minlength="3" oninvalid="this.setCustomValidity('La respuesta de seguridad debe tener mínimo 3 caracteres')" oninput="this.setCustomValidity('')" required>
-                            @error('respuesta_seguridad') <span class="error-msg">{{ $message }}</span> @enderror
-</div>
-</div>
-</div>
- 
-                <div class="form-section">
 <h3>Tratamiento de datos personales</h3>
 <div class="checkbox-group">
 <input type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" oninvalid="this.setCustomValidity('Debe aceptar el tratamiento de datos personales')" oninput="this.setCustomValidity('')" {{ old('acepta_terminos') ? 'checked' : '' }}>
