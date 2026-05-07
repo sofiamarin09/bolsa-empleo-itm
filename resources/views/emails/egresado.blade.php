@@ -35,11 +35,11 @@
 <p><strong>Fecha de registro:</strong> {{ $usuario->created_at->format('d/m/Y H:i') }}</p>
 </div>
 <div class="info-box">
-                Tu información será gestionada por la Oficina de Egresados ante el Servicio Público de Empleo (SPE). Este es el primer paso; una vez procesada tu información, deberás continuar el proceso directamente en el portal del SPE.
+                Tu información será gestionada por el Programa de Egresados ante el Servicio Público de Empleo (SPE). Este es el primer paso; una vez procesada tu información, deberás continuar el proceso directamente en el portal del SPE.
 </div>
 </div>
 <div class="footer">
-<p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+<p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
 <p>Campus Fraternidad &mdash; {{ date('Y') }}</p>
 <p>Este es un correo automático, por favor no responda a este mensaje.</p>
 </div>

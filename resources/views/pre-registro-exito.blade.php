@@ -103,7 +103,7 @@
                 <span class="estado-badge activo">Estudiante activo</span>
                 <p>Tu estado académico ha sido verificado con el Sistema de Información Académica del ITM (SIA). Has sido clasificado como estudiante activo.</p>
                 <div class="info-box success">
-                    Tu información ha sido registrada correctamente. La Oficina de Egresados gestionará tus datos ante el Servicio Público de Empleo (SPE). Recibirás una notificación por correo electrónico con los pasos a seguir.
+                    Tu información ha sido registrada correctamente. El Programa de Egresados gestionará tus datos ante el Servicio Público de Empleo (SPE). Recibirás una notificación por correo electrónico con los pasos a seguir.
                 </div>
 
             @elseif(session('estado_academico') === 'egresado')
@@ -116,7 +116,7 @@
                 <span class="estado-badge egresado">Egresado</span>
                 <p>Tu estado académico ha sido verificado con el Sistema de Información Académica del ITM (SIA). Has sido clasificado como egresado.</p>
                 <div class="info-box success">
-                    Tu información ha sido registrada correctamente. La Oficina de Egresados gestionará tus datos ante el Servicio Público de Empleo (SPE). Recibirás una notificación por correo electrónico con los pasos a seguir.
+                    Tu información ha sido registrada correctamente. El Programa de Egresados gestionará tus datos ante el Servicio Público de Empleo (SPE). Recibirás una notificación por correo electrónico con los pasos a seguir.
                 </div>
 
             @elseif(session('estado_academico') === 'externo')
@@ -148,7 +148,7 @@
     </div>
 
     <footer class="footer">
-        <p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+        <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
 

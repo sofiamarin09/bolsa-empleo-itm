@@ -211,7 +211,7 @@
     </div>
 
     <footer class="footer">
-        <p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+        <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
 

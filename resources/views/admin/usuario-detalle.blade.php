@@ -138,7 +138,7 @@
                     <p class="value">{{ $usuario->correo }}</p>
                 </div>
                 <div class="field" style="margin-top: 12px;">
-                    <p class="label">Teléfono celular</p>
+                    <p class="label">Teléfono</p>
                     <p class="value">{{ $usuario->telefono_celular }}</p>
                 </div>
                 <div class="field-grid" style="margin-top: 12px;">
@@ -205,7 +205,7 @@
     </div>
 
     <footer class="footer">
-        <p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+        <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
 

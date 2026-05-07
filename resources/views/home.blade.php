@@ -15,7 +15,7 @@
 
         .hero { background: #1a3c6e; color: white; text-align: center; padding: 70px 20px 60px; }
         .hero h2 { font-size: 34px; font-weight: 600; margin-bottom: 14px; }
-        .hero p { font-size: 15px; max-width: 620px; margin: 0 auto 28px; line-height: 1.7; opacity: 0.9; }
+        .hero p { font-size: 15px; max-width: 680px; margin: 0 auto 28px; line-height: 1.7; opacity: 0.9; }
         .btn-primary { background: #e8a820; color: #1a3c6e; padding: 14px 36px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
         .btn-primary:hover { background: #d4951a; }
 
@@ -25,6 +25,11 @@
 
         .bg-white { background: white; }
         .bg-gray { background: #f5f5f5; }
+
+        .info-card { background: #E6F1FB; border-radius: 10px; padding: 24px 28px; max-width: 700px; margin: 0 auto 32px; }
+        .info-card h4 { font-size: 15px; font-weight: 600; color: #0C447C; margin-bottom: 10px; }
+        .info-card p { font-size: 13px; color: #185FA5; line-height: 1.7; margin-bottom: 8px; }
+        .info-card a { color: #0C447C; font-weight: 600; }
 
         .perfiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; margin: 0 auto; }
         .perfil-card { border-radius: 10px; padding: 30px 24px; text-align: center; }
@@ -81,11 +86,18 @@
 
     <section class="hero">
         <h2>Tu primer paso hacia nuevas oportunidades</h2>
-        <p>Realiza tu pre-registro institucional para que la Oficina de Egresados gestione tu información ante el Servicio Público de Empleo (SPE), la plataforma del Gobierno Nacional para la intermediación laboral. Este es el primer paso; una vez validado, continuarás el proceso directamente en el portal del SPE.</p>
+        <p>Con el diligenciamiento de este formulario brindas la información para que el ITM proceda a realizar la creación de tu cuenta de usuario como buscador de empleo en la plataforma del Sistema de Información del Servicio de Empleo (SISE), donde la Institución Universitaria ITM oficiará como Prestador de tu Preferencia.</p>
         <a href="/pre-registro" class="btn-primary">Iniciar Pre-registro</a>
     </section>
 
     <section class="section bg-white">
+        <div class="info-card">
+            <h4>¿Qué sucede después del pre-registro?</h4>
+            <p>Una vez el ITM haya creado tu cuenta de usuario, a tu correo electrónico registrado llegará un mensaje de bienvenida de parte de <strong>sise@serviciodeempleo.gov.co</strong> en el cual te indicarán tus credenciales (usuario y contraseña) de acceso al sistema.</p>
+            <p>Luego, para una correcta utilización de este servicio deberás ingresar al Sistema a través de <a href="https://personas.serviciodeempleo.gov.co" target="_blank">https://personas.serviciodeempleo.gov.co</a> y completar toda la información solicitada en la hoja de vida.</p>
+            <p>Ten en cuenta que del nivel de completitud de tu hoja de vida, así como de la veracidad de la información allí consignada, dependerá el éxito de tu búsqueda laboral.</p>
+        </div>
+
         <h3 class="section-title">¿Quién puede aplicar?</h3>
         <p class="section-subtitle">Este sistema está dirigido a la comunidad académica del Instituto Tecnológico Metropolitano.</p>
         <div class="perfiles-grid">
@@ -124,7 +136,7 @@
                 <div class="paso-numero">1</div>
                 <div>
                     <h4>Diligencia el formulario</h4>
-                    <p>Completa tus datos personales y selecciona una pregunta de seguridad conforme a los requisitos del SPE.</p>
+                    <p>Completa tus datos personales conforme a los requisitos del Servicio Público de Empleo.</p>
                 </div>
             </div>
             <div class="paso-item">
@@ -145,7 +157,7 @@
                 <div class="paso-numero">4</div>
                 <div>
                     <h4>Gestión institucional</h4>
-                    <p>La Oficina de Egresados consolida y gestiona tu información ante el Servicio Público de Empleo.</p>
+                    <p>El Programa de Egresados consolida y gestiona tu información ante el Servicio Público de Empleo para la creación de tu cuenta en el SISE.</p>
                 </div>
             </div>
         </div>
@@ -156,7 +168,7 @@
         <div class="faq-list">
             <div class="faq-item">
                 <h4>¿Qué documentos necesito?</h4>
-                <p>Solo necesitas tu documento de identidad, un correo electrónico válido y tu número de teléfono celular.</p>
+                <p>Solo necesitas tu documento de identidad, un correo electrónico válido y tu número de teléfono.</p>
             </div>
             <div class="faq-item">
                 <h4>¿Si no pertenezco al ITM y ya diligencié el pre-registro, qué sucede?</h4>
@@ -168,13 +180,17 @@
             </div>
             <div class="faq-item">
                 <h4>¿Mis datos están protegidos?</h4>
-                <p>Sí. El sistema cumple con la Ley 1581 de 2012 sobre protección de datos personales. Tu información solo será utilizada para los fines del proceso de pre-registro.</p>
+                <p>Sí. El sistema cumple con la Ley 1581 de 2012 sobre protección de datos personales. Tu información solo será utilizada para los fines del proceso de intermediación laboral ante el SPE.</p>
+            </div>
+            <div class="faq-item">
+                <h4>¿Qué es el SISE?</h4>
+                <p>Es el Sistema de Información del Servicio de Empleo, la plataforma del Gobierno Nacional donde se realizan todas las transacciones de buscadores de empleo, empresarios y prestadores del Servicio Público de Empleo.</p>
             </div>
         </div>
     </section>
 
     <footer class="footer">
-        <p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+        <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
 

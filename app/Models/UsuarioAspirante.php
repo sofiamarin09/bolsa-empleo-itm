@@ -15,7 +15,7 @@ class UsuarioAspirante extends Model
         'tipo_documento',
         'numero_documento',
         'correo',
-        'telefono_celular',
+        'telefono',
         'primer_nombre',
         'segundo_nombre',
         'primer_apellido',

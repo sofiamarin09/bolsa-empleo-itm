@@ -153,9 +153,9 @@
 </div>
 <div class="form-row">
 <div class="form-group">
-<label>Teléfono celular <span class="required">*</span></label>
-<input type="text" name="telefono_celular" value="{{ old('telefono_celular') }}" autocomplete="off" pattern="3[0-9]{9}" minlength="10" maxlength="10" oninvalid="this.setCustomValidity('El teléfono celular debe tener 10 dígitos y comenzar con 3')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')" required>
-                            @error('telefono_celular') <span class="error-msg">{{ $message }}</span> @enderror
+<label>Teléfono <span class="required">*</span></label>
+                            <input type="text" name="telefono" value="{{ old('telefono') }}" autocomplete="off" pattern="[+0-9]+" minlength="7" maxlength="15" oninvalid="this.setCustomValidity('El teléfono debe tener entre 7 y 15 dígitos, solo números y el carácter +')" oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^+0-9]/g, '')" required>
+                            @error('telefono') <span class="error-msg">{{ $message }}</span> @enderror
 </div>
 </div>
 </div>
@@ -239,18 +239,31 @@
 </div>
 </div>
  
-                <div class="form-section">
-<h3>Tratamiento de datos personales</h3>
-<div class="checkbox-group">
-<input type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" oninvalid="this.setCustomValidity('Debe aceptar el tratamiento de datos personales')" oninput="this.setCustomValidity('')" {{ old('acepta_terminos') ? 'checked' : '' }}>
-<label for="acepta_terminos">
-                            Autorizo al Instituto Tecnológico Metropolitano (ITM) para el tratamiento de mis datos personales,
-                            de conformidad con la Ley 1581 de 2012 y su Decreto Reglamentario 1377 de 2013, para los fines
-                            relacionados con el proceso de pre-registro a la Bolsa de Empleo. <span class="required">*</span>
-</label>
-</div>
+<div class="form-section">
+                    <h3>Términos, condiciones y tratamiento de datos personales</h3>
+
+                    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 14px; max-height: 180px; overflow-y: auto; font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 12px; background: #fafafa;">
+                        <strong>AVISO DE PRIVACIDAD PARA FORMULARIO DE REGISTRO EN LA BOLSA DE EMPLEO</strong><br><br>
+                        LA INSTITUCIÓN UNIVERSITARIA ITM, en adelante ITM, le informa que los datos e información personal que se recolectan a través del presente formulario serán tratados con la finalidad principal de realizar acciones de intermediación laboral, otorgándole el acceso a una plataforma que le permitirá acceder a la bolsa de empleo del Gobierno nacional; en tal sentido con el fin de complementar su información, EL ITM podrá realizar análisis ocupacional basado en los datos personales que tiene bajo su custodia; crear herramientas que permitan dar una orientación más certera sobre su perfil ocupacional, todo ello conforme los criterios definidos por el Servicio Público de Empleo y por el Ministerio del Trabajo, de conformidad con los términos y exigencias de la Ley 1636 y el Decreto 2852 de 2013.<br><br>
+                        En este sentido le indicamos que EL ITM obra únicamente como un intermediario que quiere apoyar a sus estudiantes y egresados en la búsqueda de ofertas laborales que se ajusten con sus perfiles ocupacionales y que por ende no puede garantizar ni decide directamente sobre el otorgamiento o no del empleo al cual se aspire por el solicitante.<br><br>
+                        Le invitamos a consultar nuestra Política de Privacidad en: <a href="https://www.itm.edu.co/wp-content/uploads/legales/2023/politica-tratamiento-datos-ITM.pdf" target="_blank" style="color: #1a3c6e;">Política de Privacidad ITM</a><br><br>
+                        Así mismo, acepta el tratamiento de datos por parte del Servicio Público de Empleo, en atención a su política dispuesta en: <a href="https://www.serviciodeempleo.gov.co/wp-content/uploads/2025/08/RESOLUCION-0429-ANEXO-POLITICA-DE-TRATAMIENTO-DE-DATOS.pdf" target="_blank" style="color: #1a3c6e;">Política de Tratamiento de Datos SPE</a>
+                    </div>
+                    <div class="checkbox-group" style="margin-bottom: 16px;">
+                        <input type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" oninvalid="this.setCustomValidity('Debe aceptar el tratamiento de datos personales del ITM')" oninput="this.setCustomValidity('')" {{ old('acepta_terminos') ? 'checked' : '' }}>
+                        <label for="acepta_terminos">Acepto el tratamiento de datos personales del ITM <span class="required">*</span></label>
+                    </div>
                     @error('acepta_terminos') <span class="error-msg">{{ $message }}</span> @enderror
-</div>
+
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee;">
+                        <p style="font-size: 13px; color: #444; margin-bottom: 8px; font-weight: 600;">¿Acepta términos y condiciones?</p>
+                        <p style="font-size: 13px; color: #555; margin-bottom: 12px;">Ver términos y condiciones en: <a href="https://personas.serviciodeempleo.gov.co/Adjuntos/Terminos%20y%20Condiciones%20201601%20V%201.0.pdf" target="_blank" style="color: #1a3c6e;">https://personas.serviciodeempleo.gov.co</a></p>
+                        <div class="checkbox-group">
+                            <input type="checkbox" name="acepta_terminos_spe" id="acepta_terminos_spe" value="1" oninvalid="this.setCustomValidity('Debe aceptar los términos y condiciones del SPE')" oninput="this.setCustomValidity('')" {{ old('acepta_terminos_spe') ? 'checked' : '' }}>
+                            <label for="acepta_terminos_spe">Sí Acepto <span class="required">*</span></label>
+                        </div>
+                        @error('acepta_terminos_spe') <span class="error-msg">{{ $message }}</span> @enderror
+                    </div>
  
                 <button type="submit" class="btn-submit">Enviar pre-registro</button>
 </form>
@@ -258,7 +271,7 @@
 </div>
  
     <footer class="footer">
-<p>Instituto Tecnológico Metropolitano &mdash; Oficina de Egresados</p>
+<p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
 <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
 </footer>
  
