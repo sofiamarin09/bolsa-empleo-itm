@@ -146,6 +146,8 @@ class PreRegistroController extends Controller
             return redirect()->route('pre-registro.exito')->with([
                 'usuario_id' => $usuario->id,
                 'estado_academico' => $resultado['estado'],
+                'documento' => $usuario->numero_documento,
+                'correo' => $usuario->correo,
             ]);
 
         } catch (\Exception $e) {

@@ -119,6 +119,7 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         return match ($estado) {
             'estudiante_activo' => 'Estudiante activo',
             'egresado' => 'Egresado',
+            'egresado_activo' => 'Egresado y estudiante activo',
             'externo' => 'No pertenece al ITM',
             'pendiente' => 'Pendiente',
             default => $estado,

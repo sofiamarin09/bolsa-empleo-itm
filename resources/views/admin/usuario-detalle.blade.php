@@ -77,14 +77,18 @@
         <div class="user-header">
             <h2>{{ $usuario->primer_nombre }} {{ $usuario->segundo_nombre ?? '' }} {{ $usuario->primer_apellido }} {{ $usuario->segundo_apellido ?? '' }}</h2>
             @if($usuario->estado_academico === 'estudiante_activo')
-                <span class="badge activo">Estudiante activo</span>
-            @elseif($usuario->estado_academico === 'egresado')
-                <span class="badge egresado">Egresado</span>
-            @elseif($usuario->estado_academico === 'externo')
-                <span class="badge externo">Externo</span>
-            @else
-                <span class="badge pendiente">Pendiente</span>
-            @endif
+    <span class="badge activo">Estudiante activo</span>
+                            @elseif($usuario->estado_academico === 'egresado')
+    <span class="badge egresado">Egresado</span>
+                            @elseif($usuario->estado_academico === 'egresado_activo')
+    <span class="badge egresado">Egresado</span> <span class="badge activo">Activo</span>
+                            @elseif($usuario->estado_academico === 'egresado_activo')
+    <span class="badge egresado">Egresado</span> <span class="badge activo">Estudiante activo</span>
+                            @elseif($usuario->estado_academico === 'externo')
+    <span class="badge externo">Externo</span>
+                            @else
+    <span class="badge pendiente">Pendiente</span>
+                            @endif
         </div>
 
         <div class="detail-grid">

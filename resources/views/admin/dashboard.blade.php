@@ -163,13 +163,15 @@
                         <td>{{ $usuario->correo }}</td>
                         <td>
                             @if($usuario->estado_academico === 'estudiante_activo')
-                                <span class="badge activo">Estudiante activo</span>
+                            <span class="badge activo">Estudiante activo</span>
                             @elseif($usuario->estado_academico === 'egresado')
-                                <span class="badge egresado">Egresado</span>
+                            <span class="badge egresado">Egresado</span>
+                            @elseif($usuario->estado_academico === 'egresado_activo')
+                            <span class="badge egresado">Egresado</span> <span class="badge activo">Activo</span>
                             @elseif($usuario->estado_academico === 'externo')
-                                <span class="badge externo">Externo</span>
+                            <span class="badge externo">Externo</span>
                             @else
-                                <span class="badge pendiente">Pendiente</span>
+                            <span class="badge pendiente">Pendiente</span>
                             @endif
                         </td>
                         <td>{{ $usuario->created_at->format('d/m/Y H:i') }}</td>
