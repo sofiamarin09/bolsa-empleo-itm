@@ -50,7 +50,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'nombre' => ['required', 'string', 'min:2', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]+$/'],
-            'correo' => 'required|email|max:150|unique:administradores,correo',
+            'correo' => ['required', 'email', 'max:150', 'unique:administradores,correo', 'regex:/^[a-zA-Z0-9._%+\-]+@itm\.edu\.co$/'],
             'password' => 'required|string|min:8',
             'password_confirmation' => 'required|same:password',
         ], [
@@ -59,6 +59,7 @@ class AdminController extends Controller
             'nombre.min' => 'El nombre debe tener mínimo 2 caracteres.',
             'correo.required' => 'El correo es obligatorio.',
             'correo.unique' => 'Este correo ya está registrado como administrador.',
+            'correo.regex' => 'Solo se permiten correos institucionales @itm.edu.co.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener mínimo 8 caracteres.',
             'password_confirmation.same' => 'Las contraseñas no coinciden.',

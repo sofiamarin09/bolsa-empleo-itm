@@ -151,7 +151,7 @@
                         <th>Documento</th>
                         <th>Nombre</th>
                         <th>Correo</th>
-                        <th>Estado</th>
+                        <th>Tipo de usuario ITM</th>
                         <th>Fecha</th>
                     </tr>
                 </thead>
@@ -204,7 +204,7 @@ function reiniciarTemporizador() {
         modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
-    }, 900000);
+    }, 3600000);
 }
 function cerrarSesion() {
     var form = document.createElement('form');

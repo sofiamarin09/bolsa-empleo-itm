@@ -169,7 +169,7 @@
 <input type="text" name="busqueda" value="{{ request('busqueda') }}" placeholder="Buscar...">
 </div>
 <div class="filtro-group">
-<label>Estado académico</label>
+<label>Tipo de usuario ITM</label>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; background: white;">
 <label style="font-size: 12px; font-weight: 400; display: flex; align-items: center; gap: 5px; cursor: pointer; margin: 0; white-space: nowrap;">
 <input type="checkbox" name="estado[]" value="estudiante_activo" style="width: 14px; height: 14px;" {{ is_array(request('estado')) && in_array('estudiante_activo', request('estado')) ? 'checked' : '' }}>
@@ -217,7 +217,7 @@
 <th>Documento</th>
 <th>Nombre</th>
 <th>Correo</th>
-<th>Estado</th>
+<th>Tipo de usuario ITM</th>
 <th>Fecha</th>
 <th>Acciones</th>
 </tr>
@@ -321,7 +321,7 @@ function reiniciarTemporizador() {
         modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
-    }, 900000);
+    },  3600000);
 }
 function cerrarSesion() {
     var form = document.createElement('form');

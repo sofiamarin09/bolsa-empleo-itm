@@ -187,7 +187,7 @@
 <div class="paso-numero">2</div>
 <div>
 <h4>Validación académica automática</h4>
-<p>El sistema verifica el estado académico directamente con el Sistema de Información Académica del ITM (SIA).</p>
+<p>El sistema verifica el Tipo de usuario ITM directamente con el Sistema de Información Académica del ITM (SIA).</p>
 </div>
 </div>
 <div class="paso-item">

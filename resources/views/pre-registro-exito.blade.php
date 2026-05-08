@@ -224,11 +224,11 @@
 </div>
 <h2>Pre-registro exitoso</h2>
 <div class="badges"><span class="estado-badge activo">Estudiante activo</span></div>
-<p>Su estado académico ha sido verificado con el Sistema de Información Académica del ITM (SIA) y ha sido clasificado como <strong>estudiante activo</strong>.</p>
+<p>Su Tipo de usuario ITM ha sido verificado con el Sistema de Información Académica del ITM (SIA) y ha sido clasificado como <strong>estudiante activo</strong>.</p>
 <div class="datos-box">
 <p><strong>Documento:</strong> {{ session('documento') }}</p>
 <p><strong>Correo:</strong> {{ session('correo') }}</p>
-<p><strong>Estado:</strong> Estudiante activo</p>
+<p><strong>Tipo de usuario ITM:</strong> Estudiante activo</p>
 </div>
 <div class="info-box success">
 
@@ -241,11 +241,11 @@
 </div>
 <h2>Pre-registro exitoso</h2>
 <div class="badges"><span class="estado-badge egresado">Egresado</span></div>
-<p>Su estado académico ha sido verificado con el Sistema de Información Académica del ITM (SIA) y ha sido clasificado como <strong>egresado</strong>.</p>
+<p>Su Tipo de usuario ITM ha sido verificado con el Sistema de Información Académica del ITM (SIA) y ha sido clasificado como <strong>egresado</strong>.</p>
 <div class="datos-box">
 <p><strong>Documento:</strong> {{ session('documento') }}</p>
 <p><strong>Correo:</strong> {{ session('correo') }}</p>
-<p><strong>Estado:</strong> Egresado</p>
+<p><strong>Tipo de usuario ITM:</strong> Egresado</p>
 </div>
 <div class="info-box success">
 
@@ -261,11 +261,11 @@
 <span class="estado-badge egresado">Egresado</span>
 <span class="estado-badge activo">Estudiante activo</span>
 </div>
-<p>Su estado académico ha sido verificado con el Sistema de Información Académica del ITM (SIA). Se ha identificado que usted es <strong>egresado</strong> y además <strong>estudiante activo</strong> del ITM.</p>
+<p>Su Tipo de usuario ITM ha sido verificado con el Sistema de Información Académica del ITM (SIA). Se ha identificado que usted es <strong>egresado</strong> y además <strong>estudiante activo</strong> del ITM.</p>
 <div class="datos-box">
 <p><strong>Documento:</strong> {{ session('documento') }}</p>
 <p><strong>Correo:</strong> {{ session('correo') }}</p>
-<p><strong>Estado:</strong> Egresado y estudiante activo</p>
+<p><strong>Tipo de usuario ITM:</strong> Egresado y estudiante activo</p>
 </div>
 <div class="info-box success">
 
@@ -282,7 +282,7 @@
 <div class="datos-box">
 <p><strong>Documento:</strong> {{ session('documento') }}</p>
 <p><strong>Correo:</strong> {{ session('correo') }}</p>
-<p><strong>Estado:</strong> No pertenece al ITM</p>
+<p><strong>Tipo de usuario ITM:</strong> No pertenece al ITM</p>
 </div>
 <div class="info-box warning">
 
@@ -308,7 +308,7 @@
 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
 </div>
 <h2>Pre-registro enviado</h2>
-<p>Su información ha sido recibida correctamente. El sistema validará su estado académico y recibirá una notificación por correo electrónico con el resultado.</p>
+<p>Su información ha sido recibida correctamente. El sistema validará su Tipo de usuario ITM y recibirá una notificación por correo electrónico con el resultado.</p>
 
             @endif
  

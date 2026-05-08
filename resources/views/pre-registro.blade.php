@@ -196,6 +196,7 @@
 <option value="">Seleccione...</option>
 <option value="masculino" {{ old('sexo') == 'masculino' ? 'selected' : '' }}>Masculino</option>
 <option value="femenino" {{ old('sexo') == 'femenino' ? 'selected' : '' }}>Femenino</option>
+<option value="intersexual" {{ old('sexo') == 'intersexual' ? 'selected' : '' }}>Intersexual</option>
 </select>
                             @error('sexo') <span class="error-msg">{{ $message }}</span> @enderror
 </div>

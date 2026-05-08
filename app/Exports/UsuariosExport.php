@@ -59,7 +59,7 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             'País',
             'Departamento',
             'Municipio',
-            'Estado académico',
+            'Tipo de usuario ITM',
             'Fecha de registro',
         ];
     }

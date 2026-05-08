@@ -62,7 +62,7 @@
 <div class="datos">
 <p><strong>Documento:</strong> {{ $usuario->numero_documento }}</p>
 <p><strong>Correo:</strong> {{ $usuario->correo }}</p>
-<p><strong>Estado:</strong> No pertenece al ITM</p>
+<p><strong>Tipo de usuario ITM:</strong> No pertenece al ITM</p>
 </div>
 <div class="info-box">
 

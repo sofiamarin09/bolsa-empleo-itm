@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gráficas - ITM Bolsa de empleo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
@@ -100,14 +101,14 @@
                     <div class="filtro-group">
                         <label>Fecha hasta</label>
                         <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" max="{{ date('Y-m-d') }}">
-                        
                     </div>
                     <div class="filtro-group">
-                        <label>Estado académico</label>
+                        <label>Tipo de usuario ITM</label>
                         <select name="estado">
                             <option value="">Todos</option>
                             <option value="estudiante_activo" {{ request('estado') == 'estudiante_activo' ? 'selected' : '' }}>Estudiante activo</option>
                             <option value="egresado" {{ request('estado') == 'egresado' ? 'selected' : '' }}>Egresado</option>
+                            <option value="egresado_activo" {{ request('estado') == 'egresado_activo' ? 'selected' : '' }}>Egresado y activo</option>
                             <option value="externo" {{ request('estado') == 'externo' ? 'selected' : '' }}>Externo</option>
                             <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                         </select>
@@ -118,6 +119,7 @@
                             <option value="">Todos</option>
                             <option value="masculino" {{ request('sexo') == 'masculino' ? 'selected' : '' }}>Masculino</option>
                             <option value="femenino" {{ request('sexo') == 'femenino' ? 'selected' : '' }}>Femenino</option>
+                            <option value="intersexual" {{ request('sexo') == 'intersexual' ? 'selected' : '' }}>Intersexual</option>
                         </select>
                     </div>
                 </div>
@@ -162,6 +164,7 @@
                     </div>
                     <div class="filtro-group"></div>
                     <div class="filtro-group"></div>
+                    <div class="filtro-group"></div>
                 </div>
                 <div class="filtros-actions">
                     <button type="submit" class="btn-aplicar">Aplicar filtros</button>
@@ -199,16 +202,16 @@
             </div>
 
             <div class="chart-card">
-                <h3>Registros en el tiempo</h3>
+                <h3>Estado de notificaciones</h3>
                 <div class="chart-container">
-                    <canvas id="chartBarras"></canvas>
+                    <canvas id="chartNotificaciones"></canvas>
                 </div>
             </div>
 
             <div class="chart-card">
-                <h3>Estado de notificaciones</h3>
+                <h3>Registros en el tiempo</h3>
                 <div class="chart-container">
-                    <canvas id="chartNotificaciones"></canvas>
+                    <canvas id="chartBarras"></canvas>
                 </div>
             </div>
 
@@ -229,6 +232,8 @@
     </footer>
 
     <script>
+    Chart.register(ChartDataLabels);
+
     var meses = {!! json_encode($registrosPorMes->pluck('mes')->toArray()) !!};
     var totalesMes = {!! json_encode($registrosPorMes->pluck('total')->toArray()) !!};
 
@@ -255,46 +260,12 @@
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: {
-                        padding: 16,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        font: { size: 12, family: 'Segoe UI' }
-                    }
-                }
-            }
-        }
-    });
-
-    new Chart(document.getElementById('chartBarras'), {
-        type: 'bar',
-        data: {
-            labels: mesesNombres,
-            datasets: [{
-                label: 'Registros',
-                data: totalesMes,
-                backgroundColor: totalesMes.map(function(v, i) {
-                    return i === totalesMes.length - 1 ? '#e8a820' : '#1a3c6e';
-                }),
-                borderRadius: 6,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1, font: { size: 11, family: 'Segoe UI' } },
-                    grid: { color: '#f0f0f0' }
+                    labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12, family: 'Segoe UI' } }
                 },
-                x: {
-                    ticks: { font: { size: 11, family: 'Segoe UI' } },
-                    grid: { display: false }
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 13 },
+                    formatter: function(value) { return value > 0 ? value : ''; }
                 }
             }
         }
@@ -305,7 +276,7 @@
     var notifFallidas = {!! json_encode($notifFallidasPorMes->pluck('total')->toArray()) !!};
     var notifFallidasMeses = {!! json_encode($notifFallidasPorMes->pluck('mes')->toArray()) !!};
 
-    var todosMeses = [...new Set([...notifEnviadasMeses, ...notifFallidasMeses])].sort();
+    var todosMeses = [...new Set([...notifEnviadasMeses, ...notifFallidasMeses, ...meses])].sort();
     var todosMesesNombres = todosMeses.map(function(m) {
         var partes = m.split('-');
         var nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -323,27 +294,66 @@
     });
 
     new Chart(document.getElementById('chartNotificaciones'), {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: todosMesesNombres,
             datasets: [{
                 label: 'Enviadas',
                 data: enviadasData,
-                borderColor: '#059669',
-                backgroundColor: 'rgba(5, 150, 105, 0.08)',
-                borderWidth: 2.5,
-                pointBackgroundColor: '#059669',
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                fill: true,
-                tension: 0.3
+                backgroundColor: '#059669',
+                borderRadius: 4,
+                borderSkipped: false
             }, {
                 label: 'Fallidas',
                 data: fallidasData,
-                borderColor: '#e53e3e',
-                backgroundColor: 'rgba(229, 62, 62, 0.08)',
+                backgroundColor: '#e53e3e',
+                borderRadius: 4,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12, family: 'Segoe UI' } }
+                },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#333',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: function(value) { return value > 0 ? value : ''; }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, font: { size: 11, family: 'Segoe UI' } },
+                    grid: { color: '#f0f0f0' }
+                },
+                x: {
+                    ticks: { font: { size: 11, family: 'Segoe UI' } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('chartBarras'), {
+        type: 'line',
+        data: {
+            labels: mesesNombres,
+            datasets: [{
+                label: 'Registros',
+                data: totalesMes,
+                borderColor: '#1a3c6e',
+                backgroundColor: 'rgba(26, 60, 110, 0.08)',
                 borderWidth: 2.5,
-                pointBackgroundColor: '#e53e3e',
+                pointBackgroundColor: totalesMes.map(function(v, i) {
+                    return i === totalesMes.length - 1 ? '#e8a820' : '#1a3c6e';
+                }),
                 pointRadius: 5,
                 pointHoverRadius: 7,
                 fill: true,
@@ -354,14 +364,13 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 16,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        font: { size: 12, family: 'Segoe UI' }
-                    }
+                legend: { display: false },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#1a3c6e',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: function(value) { return value > 0 ? value : ''; }
                 }
             },
             scales: {
@@ -395,12 +404,12 @@
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: {
-                        padding: 16,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        font: { size: 12, family: 'Segoe UI' }
-                    }
+                    labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12, family: 'Segoe UI' } }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 13 },
+                    formatter: function(value) { return value > 0 ? value : ''; }
                 }
             }
         }
@@ -408,82 +417,71 @@
     </script>
 
     <script>
-    document.querySelectorAll('.filtros-card input[type="text"]').forEach(function(input) {
-        input.setAttribute('readonly', true);
-        input.addEventListener('focus', function() {
-            this.removeAttribute('readonly');
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/paises')
+            .then(function(r) { return r.json(); })
+            .then(function(paises) {
+                var sel = document.getElementById('filtro-pais');
+                paises.forEach(function(p) {
+                    var opt = document.createElement('option');
+                    opt.value = p.nombre;
+                    opt.textContent = p.nombre;
+                    opt.setAttribute('data-id', p.id);
+                    if (p.nombre === '{{ request("pais") }}') opt.selected = true;
+                    sel.appendChild(opt);
+                });
+                var paisActual = '{{ request("pais") }}';
+                if (paisActual) filtrarPais(paisActual);
+            });
     });
+
+    function filtrarPais(paisNombre) {
+        var sel = document.getElementById('filtro-pais');
+        var selDep = document.getElementById('filtro-departamento');
+        var selMun = document.getElementById('filtro-municipio');
+        selDep.innerHTML = '<option value="">Todos</option>';
+        selMun.innerHTML = '<option value="">Todos</option>';
+        if (paisNombre === 'Colombia') {
+            var opt = sel.options[sel.selectedIndex];
+            var paisId = opt.getAttribute('data-id');
+            fetch('/api/departamentos/' + paisId)
+                .then(function(r) { return r.json(); })
+                .then(function(deps) {
+                    deps.forEach(function(d) {
+                        var o = document.createElement('option');
+                        o.value = d.nombre;
+                        o.textContent = d.nombre;
+                        o.setAttribute('data-id', d.id);
+                        if (d.nombre === '{{ request("departamento") }}') o.selected = true;
+                        selDep.appendChild(o);
+                    });
+                    var depActual = '{{ request("departamento") }}';
+                    if (depActual) filtrarDepartamento(depActual);
+                });
+        }
+    }
+
+    function filtrarDepartamento(depNombre) {
+        var selDep = document.getElementById('filtro-departamento');
+        var selMun = document.getElementById('filtro-municipio');
+        selMun.innerHTML = '<option value="">Todos</option>';
+        if (depNombre) {
+            var opt = selDep.options[selDep.selectedIndex];
+            var depId = opt.getAttribute('data-id');
+            fetch('/api/municipios/' + depId)
+                .then(function(r) { return r.json(); })
+                .then(function(muns) {
+                    muns.forEach(function(m) {
+                        var o = document.createElement('option');
+                        o.value = m.nombre;
+                        o.textContent = m.nombre;
+                        if (m.nombre === '{{ request("municipio") }}') o.selected = true;
+                        selMun.appendChild(o);
+                    });
+                });
+        }
+    }
     </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/api/paises')
-        .then(function(r) { return r.json(); })
-        .then(function(paises) {
-            var sel = document.getElementById('filtro-pais');
-            paises.forEach(function(p) {
-                var opt = document.createElement('option');
-                opt.value = p.nombre;
-                opt.textContent = p.nombre;
-                opt.setAttribute('data-id', p.id);
-                if (p.nombre === '{{ request("pais") }}') opt.selected = true;
-                sel.appendChild(opt);
-            });
-            var paisActual = '{{ request("pais") }}';
-            if (paisActual) filtrarPais(paisActual);
-        });
-});
-
-function filtrarPais(paisNombre) {
-    var sel = document.getElementById('filtro-pais');
-    var selDep = document.getElementById('filtro-departamento');
-    var selMun = document.getElementById('filtro-municipio');
-    selDep.innerHTML = '<option value="">Todos</option>';
-    selMun.innerHTML = '<option value="">Todos</option>';
-
-    if (paisNombre === 'Colombia') {
-        var opt = sel.options[sel.selectedIndex];
-        var paisId = opt.getAttribute('data-id');
-        fetch('/api/departamentos/' + paisId)
-            .then(function(r) { return r.json(); })
-            .then(function(deps) {
-                deps.forEach(function(d) {
-                    var o = document.createElement('option');
-                    o.value = d.nombre;
-                    o.textContent = d.nombre;
-                    o.setAttribute('data-id', d.id);
-                    if (d.nombre === '{{ request("departamento") }}') o.selected = true;
-                    selDep.appendChild(o);
-                });
-                var depActual = '{{ request("departamento") }}';
-                if (depActual) filtrarDepartamento(depActual);
-            });
-    }
-}
-
-function filtrarDepartamento(depNombre) {
-    var selDep = document.getElementById('filtro-departamento');
-    var selMun = document.getElementById('filtro-municipio');
-    selMun.innerHTML = '<option value="">Todos</option>';
-
-    if (depNombre) {
-        var opt = selDep.options[selDep.selectedIndex];
-        var depId = opt.getAttribute('data-id');
-        fetch('/api/municipios/' + depId)
-            .then(function(r) { return r.json(); })
-            .then(function(muns) {
-                muns.forEach(function(m) {
-                    var o = document.createElement('option');
-                    o.value = m.nombre;
-                    o.textContent = m.nombre;
-                    if (m.nombre === '{{ request("municipio") }}') o.selected = true;
-                    selMun.appendChild(o);
-                });
-            });
-    }
-}
-</script>
 
     <script>
     var tiempoInactividad;
@@ -497,7 +495,7 @@ function filtrarDepartamento(depNombre) {
             modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
-        }, 900000);
+        }, 3600000);
     }
     function cerrarSesion() {
         var form = document.createElement('form');

@@ -31,11 +31,11 @@
 <div class="datos">
 <p><strong>Documento:</strong> {{ $usuario->numero_documento }}</p>
 <p><strong>Correo:</strong> {{ $usuario->correo }}</p>
-<p><strong>Estado:</strong> Egresado</p>
+<p><strong>Tipo de usuario ITM:</strong> Egresado</p>
 <p><strong>Fecha de registro:</strong> {{ $usuario->created_at->format('d/m/Y H:i') }}</p>
 </div>
 <div class="info-box">
-                Tu información será gestionada por el Programa de Egresados ante el Servicio Público de Empleo (SPE). Este es el primer paso; una vez procesada tu información, deberás continuar el proceso directamente en el portal del SPE.
+                Tu información será gestionada por  Programa de Egresados ante el Servicio Público de Empleo (SPE). Este es el primer paso; una vez procesada tu información, deberás continuar el proceso directamente en el portal del SPE.
 </div>
 </div>
 <div class="footer">

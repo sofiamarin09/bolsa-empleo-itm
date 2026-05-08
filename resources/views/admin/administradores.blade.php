@@ -41,6 +41,7 @@
             font-family: 'Segoe UI', sans-serif;
         }
         .form-group input:focus { outline: none; border-color: #2d6ab8; box-shadow: 0 0 0 3px rgba(45,106,184,0.12); }
+        .form-group .hint { font-size: 11px; color: #999; margin-top: 4px; }
 
         .btn-crear {
             background: #1a3c6e;
@@ -131,10 +132,10 @@
     <div class="container">
 
         <div class="nav-links">
-        <a href="{{ route('admin.dashboard') }}" class="nav-link active">Dashboard</a>
-        <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
-        <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
-        <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
+            <a href="{{ route('admin.administradores') }}" class="nav-link active">Administradores</a>
+            <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
         </div>
 
         @if(session('success'))
@@ -159,8 +160,9 @@
                         @error('nombre') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Correo electrónico <span class="required">*</span></label>
-                        <input type="text" name="correo" value="{{ old('correo') }}" autocomplete="one-time-code" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}" oninvalid="this.setCustomValidity('Ingrese un correo válido (ejemplo: usuario@correo.com)')" oninput="this.setCustomValidity('')" required>
+                        <label>Correo institucional <span class="required">*</span></label>
+                        <input type="email" name="correo" value="{{ old('correo') }}" autocomplete="one-time-code" placeholder="ejemplo@itm.edu.co" pattern="[a-zA-Z0-9._%+\-]+@itm\.edu\.co" oninvalid="this.setCustomValidity('Solo se permiten correos institucionales @itm.edu.co')" oninput="this.setCustomValidity('')" required>
+                        <p class="hint">Solo se permiten correos con dominio @itm.edu.co</p>
                         @error('correo') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
@@ -224,38 +226,38 @@
     });
     </script>
 
-<script>
-var tiempoInactividad;
-function reiniciarTemporizador() {
-    clearTimeout(tiempoInactividad);
-    tiempoInactividad = setTimeout(function() {
-        var overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
-        var modal = document.createElement('div');
-        modal.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
-        modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-    }, 900000);
-}
-function cerrarSesion() {
-    var form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ route("admin.logout") }}';
-    var csrf = document.createElement('input');
-    csrf.type = 'hidden';
-    csrf.name = '_token';
-    csrf.value = '{{ csrf_token() }}';
-    form.appendChild(csrf);
-    document.body.appendChild(form);
-    form.submit();
-}
-document.addEventListener('mousemove', reiniciarTemporizador);
-document.addEventListener('keypress', reiniciarTemporizador);
-document.addEventListener('click', reiniciarTemporizador);
-document.addEventListener('scroll', reiniciarTemporizador);
-reiniciarTemporizador();
-</script>
+    <script>
+    var tiempoInactividad;
+    function reiniciarTemporizador() {
+        clearTimeout(tiempoInactividad);
+        tiempoInactividad = setTimeout(function() {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
+            modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        }, 3600000);
+    }
+    function cerrarSesion() {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("admin.logout") }}';
+        var csrf = document.createElement('input');
+        csrf.type = 'hidden';
+        csrf.name = '_token';
+        csrf.value = '{{ csrf_token() }}';
+        form.appendChild(csrf);
+        document.body.appendChild(form);
+        form.submit();
+    }
+    document.addEventListener('mousemove', reiniciarTemporizador);
+    document.addEventListener('keypress', reiniciarTemporizador);
+    document.addEventListener('click', reiniciarTemporizador);
+    document.addEventListener('scroll', reiniciarTemporizador);
+    reiniciarTemporizador();
+    </script>
 
 </body>
 </html>

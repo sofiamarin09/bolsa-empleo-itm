@@ -34,7 +34,7 @@ class PreRegistroController extends Controller
             'primer_apellido' => ['required', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
             'segundo_apellido' => ['nullable', 'string', 'min:2', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-]+$/'],
             'fecha_nacimiento' => 'required|date|before_or_equal:' . now()->subYears(14)->format('Y-m-d') . '|after_or_equal:' . now()->subYears(100)->format('Y-m-d'),
-            'sexo' => 'required|in:masculino,femenino',
+            'sexo' => 'required|in:masculino,femenino,intersexual',
             'telefono' => 'required|string|min:7|max:15|regex:/^[+0-9]+$/',
             'pais' => 'required|string|min:2|max:100',
             'departamento' => 'nullable|string|min:2|max:100',

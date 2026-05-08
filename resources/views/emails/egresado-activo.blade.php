@@ -42,11 +42,11 @@
 <span class="badge">Egresado</span> <span class="badge2">Estudiante activo</span>
 <h2>Pre-registro exitoso</h2>
 <p>Hola {{ $usuario->primer_nombre }} {{ $usuario->primer_apellido }},</p>
-<p>Su pre-registro en el sistema de la Bolsa de Empleo del ITM ha sido procesado exitosamente. Su estado académico ha sido verificado con el Sistema de Información Académica (SIA) y se ha identificado que usted es <strong>egresado</strong> y además <strong>estudiante activo</strong> del ITM.</p>
+<p>Su pre-registro en el sistema de la Bolsa de Empleo del ITM ha sido procesado exitosamente. Su Tipo de usuario ITM ha sido verificado con el Sistema de Información Académica (SIA) y se ha identificado que usted es <strong>egresado</strong> y además <strong>estudiante activo</strong> del ITM.</p>
 <div class="datos">
 <p><strong>Documento:</strong> {{ $usuario->numero_documento }}</p>
 <p><strong>Correo:</strong> {{ $usuario->correo }}</p>
-<p><strong>Estado:</strong> Egresado y estudiante activo</p>
+<p><strong>Tipo de usuario ITM:</strong> Egresado y estudiante activo</p>
 <p><strong>Fecha de registro:</strong> {{ $usuario->created_at->format('d/m/Y H:i') }}</p>
 </div>
 <div class="info-box">
