@@ -243,4 +243,174 @@ class AdminController extends Controller
             'pendientesVal'
         ));
     }
+
+    public function showImportar()
+    {
+        return view('admin.importar');
+    }
+
+    public function subirExcel(Request $request)
+    {
+        $request->validate([
+            'archivo' => 'required|file|mimes:xlsx,xls,csv|max:20480',
+        ], [
+            'archivo.required' => 'Debe seleccionar un archivo.',
+            'archivo.mimes' => 'El archivo debe ser Excel (.xlsx, .xls) o CSV.',
+            'archivo.max' => 'El archivo no debe superar los 20MB.',
+        ]);
+
+        $archivo = $request->file('archivo');
+        $rutaTemporal = $archivo->store('importaciones', 'local');
+
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(storage_path('app/private/' . $rutaTemporal));
+        $sheet = $spreadsheet->getActiveSheet();
+        $headers = [];
+        foreach ($sheet->getRowIterator(1, 1) as $row) {
+            foreach ($row->getCellIterator() as $cell) {
+                $valor = trim($cell->getValue());
+                if ($valor) $headers[] = $valor;
+            }
+        }
+
+        $totalFilas = $sheet->getHighestRow() - 1;
+
+        $camposBD = [
+            '' => '-- No importar --',
+            'tipo_documento' => 'Tipo de documento',
+            'numero_documento' => 'Número de documento',
+            'correo' => 'Correo electrónico',
+            'telefono' => 'Teléfono',
+            'primer_nombre' => 'Primer nombre',
+            'segundo_nombre' => 'Segundo nombre',
+            'primer_apellido' => 'Primer apellido',
+            'segundo_apellido' => 'Segundo apellido',
+            'fecha_nacimiento' => 'Fecha de nacimiento',
+            'sexo' => 'Sexo',
+            'pais' => 'País',
+            'departamento' => 'Departamento',
+            'municipio' => 'Municipio',
+            'estado_academico' => 'Tipo de usuario ITM',
+        ];
+
+        return view('admin.importar-mapeo', compact('headers', 'camposBD', 'rutaTemporal', 'totalFilas'));
+    }
+
+    public function ejecutarImportacion(Request $request)
+    {
+        $rutaTemporal = $request->input('ruta_temporal');
+        $mapeo = $request->input('mapeo', []);
+
+        $mapeoFiltrado = array_filter($mapeo, function ($campo) {
+            return $campo !== '';
+        });
+
+        if (!in_array('numero_documento', $mapeoFiltrado)) {
+            return back()->withErrors(['error' => 'Debe mapear al menos el campo "Número de documento".']);
+        }
+
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(storage_path('app/private/' . $rutaTemporal));
+        $sheet = $spreadsheet->getActiveSheet();
+        $filas = $sheet->toArray();
+        $headers = array_shift($filas);
+
+        $nuevos = 0;
+        $duplicados = 0;
+        $errores = 0;
+
+        foreach (array_chunk($filas, 500) as $chunk) {
+            foreach ($chunk as $fila) {
+                try {
+                    $datos = [];
+                    foreach ($mapeoFiltrado as $indice => $campo) {
+                        $valor = isset($fila[$indice]) ? trim($fila[$indice]) : null;
+                        if ($valor !== null && $valor !== '') {
+                            $datos[$campo] = $valor;
+                        }
+                    }
+
+                    if (empty($datos['numero_documento'])) {
+                        $errores++;
+                        continue;
+                    }
+
+                    $existe = UsuarioAspirante::where('numero_documento', $datos['numero_documento'])->exists();
+                    if ($existe) {
+                        $duplicados++;
+                        continue;
+                    }
+
+                    if (isset($datos['correo'])) {
+                        $datos['correo'] = strtolower($datos['correo']);
+                        $correoExiste = UsuarioAspirante::where('correo', $datos['correo'])->exists();
+                        if ($correoExiste) {
+                            $duplicados++;
+                            continue;
+                        }
+                    }
+
+                    if (isset($datos['tipo_documento'])) {
+                        $datos['tipo_documento'] = match(mb_strtolower(trim($datos['tipo_documento']))) {
+                            'cédula de ciudadanía', 'cedula de ciudadania', 'cc', 'cédula', 'cedula' => 'cedula_ciudadania',
+                            'tarjeta de identidad', 'ti', 'tarjeta' => 'tarjeta_identidad',
+                            'documento nacional', 'documento nacional de identificación', 'dni' => 'documento_nacional',
+                            default => $datos['tipo_documento'],
+                        };
+                    }
+
+                    if (isset($datos['estado_academico'])) {
+                        $datos['estado_academico'] = match(mb_strtolower(trim($datos['estado_academico']))) {
+                            'estudiante activo', 'activo', 'estudiante' => 'estudiante_activo',
+                            'egresado', 'graduado' => 'egresado',
+                            'externo', 'no pertenece', 'no pertenece al itm' => 'externo',
+                            'egresado y activo', 'egresado activo', 'egresado y estudiante activo' => 'egresado_activo',
+                            default => 'pendiente',
+                        };
+                    } else {
+                        $datos['estado_academico'] = 'pendiente';
+                    }
+
+                    if (isset($datos['sexo'])) {
+                        $datos['sexo'] = mb_strtolower(trim($datos['sexo']));
+                    }
+
+                    if (isset($datos['fecha_nacimiento']) && !empty($datos['fecha_nacimiento'])) {
+                        $fecha = $datos['fecha_nacimiento'];
+                        if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $fecha, $m)) {
+                            $datos['fecha_nacimiento'] = $m[3] . '-' . str_pad($m[2], 2, '0', STR_PAD_LEFT) . '-' . str_pad($m[1], 2, '0', STR_PAD_LEFT);
+                        } elseif (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $fecha, $m)) {
+                            $datos['fecha_nacimiento'] = $m[3] . '-' . str_pad($m[2], 2, '0', STR_PAD_LEFT) . '-' . str_pad($m[1], 2, '0', STR_PAD_LEFT);
+                        }
+                    }
+
+                    unset($datos['']);
+
+                    $datos['acepta_terminos'] = true;
+                    $datos['fecha_aceptacion_terminos'] = now();
+
+                    UsuarioAspirante::create($datos);
+                    $nuevos++;
+
+                } catch (\Exception $e) {
+                    $errores++;
+                }
+            }
+        }
+
+        if (file_exists(storage_path('app/private/' . $rutaTemporal))) {
+            unlink(storage_path('app/private/' . $rutaTemporal));
+        }
+
+        RegistroAuditoria::create([
+            'tipo_evento' => 'importacion_excel',
+            'descripcion' => "Importación masiva: {$nuevos} nuevos, {$duplicados} duplicados, {$errores} errores.",
+            'ip_address' => $request->ip(),
+            'administrador_id' => Session::get('admin_id'),
+        ]);
+
+        return redirect()->route('admin.importar')->with('resultado', [
+            'nuevos' => $nuevos,
+            'duplicados' => $duplicados,
+            'errores' => $errores,
+        ]);
+    }
 }

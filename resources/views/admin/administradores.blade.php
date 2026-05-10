@@ -136,6 +136,7 @@
             <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
             <a href="{{ route('admin.administradores') }}" class="nav-link active">Administradores</a>
             <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
+            <a href="{{ route('admin.importar') }}" class="nav-link">Importar Excel</a>
         </div>
 
         @if(session('success'))

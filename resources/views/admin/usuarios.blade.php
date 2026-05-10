@@ -158,6 +158,7 @@
 <a href="{{ route('admin.usuarios') }}" class="nav-link active">Usuarios</a>
 <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
 <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
+<a href="{{ route('admin.importar') }}" class="nav-link">Importar Excel</a>
 </div>
  
         <div class="filtros-card">
