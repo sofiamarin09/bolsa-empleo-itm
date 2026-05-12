@@ -28,12 +28,17 @@ class UsuarioAspirante extends Model
         'estado_academico',
         'acepta_terminos',
         'fecha_aceptacion_terminos',
+        'gestionado_spe',
+        'fecha_gestion_spe',
+        'gestionado_por',
     ];
 
     protected $casts = [
         'fecha_nacimiento' => 'date',
         'acepta_terminos' => 'boolean',
         'fecha_aceptacion_terminos' => 'datetime',
+        'gestionado_spe' => 'boolean',
+        'fecha_gestion_spe' => 'datetime',
     ];
 
     public function validaciones()

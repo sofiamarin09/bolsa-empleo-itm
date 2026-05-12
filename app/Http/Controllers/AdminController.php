@@ -24,6 +24,9 @@ class AdminController extends Controller
         $correosEnviados = Notificacion::where('estado_envio', 'enviado')->count();
         $correosFallidos = Notificacion::where('estado_envio', 'fallido')->count();
 
+        $gestionadosSpe = UsuarioAspirante::where('gestionado_spe', true)->count();
+        $pendientesSpe = UsuarioAspirante::where('gestionado_spe', false)->count();
+
         $ultimosRegistros = UsuarioAspirante::orderBy('created_at', 'desc')->take(5)->get();
 
         return view('admin.dashboard', compact(
@@ -34,6 +37,8 @@ class AdminController extends Controller
             'pendientes',
             'correosEnviados',
             'correosFallidos',
+            'gestionadosSpe',
+            'pendientesSpe',
             'ultimosRegistros'
         ));
     }
@@ -150,6 +155,14 @@ class AdminController extends Controller
             $query->whereDate('created_at', '<=', $request->fecha_hasta);
         }
 
+        if ($request->filled('gestion_spe')) {
+            if ($request->gestion_spe === 'gestionado') {
+                $query->where('gestionado_spe', true);
+            } elseif ($request->gestion_spe === 'pendiente') {
+                $query->where('gestionado_spe', false);
+            }
+        }
+
         $usuarios = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->query());
 
         return view('admin.usuarios', compact('usuarios'));
@@ -160,6 +173,32 @@ class AdminController extends Controller
         $usuario = UsuarioAspirante::with(['validaciones', 'notificaciones'])->findOrFail($id);
 
         return view('admin.usuario-detalle', compact('usuario'));
+    }
+
+    public function gestionarSpe(Request $request, $id)
+    {
+        $usuario = UsuarioAspirante::findOrFail($id);
+        $nuevoEstado = !$usuario->gestionado_spe;
+
+        $usuario->update([
+            'gestionado_spe' => $nuevoEstado,
+            'fecha_gestion_spe' => $nuevoEstado ? now() : null,
+            'gestionado_por' => $nuevoEstado ? Session::get('admin_nombre') : null,
+        ]);
+
+        RegistroAuditoria::create([
+            'tipo_evento' => $nuevoEstado ? 'gestion_spe' : 'revertir_gestion_spe',
+            'descripcion' => ($nuevoEstado ? 'Marcado como gestionado: ' : 'Revertido gestión: ') . $usuario->numero_documento,
+            'ip_address' => $request->ip(),
+            'administrador_id' => Session::get('admin_id'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'gestionado' => $nuevoEstado,
+            'fecha' => $nuevoEstado ? now()->format('d/m/Y H:i') : null,
+            'admin' => $nuevoEstado ? Session::get('admin_nombre') : null,
+        ]);
     }
 
     public function graficas(Request $request)
@@ -371,6 +410,10 @@ class AdminController extends Controller
 
                     if (isset($datos['sexo'])) {
                         $datos['sexo'] = mb_strtolower(trim($datos['sexo']));
+                    }
+
+                    if (isset($datos['correo'])) {
+                        $datos['correo'] = mb_strtolower(trim($datos['correo']));
                     }
 
                     if (isset($datos['fecha_nacimiento']) && !empty($datos['fecha_nacimiento'])) {

@@ -124,6 +124,12 @@
  
         .empty-state { text-align: center; color: #999; padding: 40px; font-size: 14px; }
  
+        .spe-check { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto; transition: all 0.2s; }
+
+        .spe-check.checked { background: #059669; border-color: #059669; }
+
+        .spe-check:hover { border-color: #059669; }
+ 
         .footer { background: #1a3c6e; color: white; text-align: center; padding: 20px; margin-top: 40px; }
 
         .footer p { font-size: 12px; opacity: 0.7; margin-bottom: 2px; }
@@ -203,6 +209,19 @@
 <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}">
 </div>
 </div>
+<div class="filtros-grid">
+<div class="filtro-group">
+<label>Gestión SPE</label>
+<select name="gestion_spe">
+<option value="">Todos</option>
+<option value="gestionado" {{ request('gestion_spe') == 'gestionado' ? 'selected' : '' }}>Gestionados</option>
+<option value="pendiente" {{ request('gestion_spe') == 'pendiente' ? 'selected' : '' }}>Pendientes</option>
+</select>
+</div>
+<div class="filtro-group"></div>
+<div class="filtro-group"></div>
+<div class="filtro-group"></div>
+</div>
 <div class="filtros-actions">
 <button type="submit" class="btn-buscar">Buscar</button>
 <a href="{{ route('admin.usuarios') }}" class="btn-limpiar">Limpiar filtros</a>
@@ -215,48 +234,77 @@
 <table>
 <thead>
 <tr>
+<th style="width: 50px; text-align: center;">SPE</th>
 <th>Documento</th>
 <th>Nombre</th>
 <th>Correo</th>
 <th>Tipo de usuario ITM</th>
-<th>Fecha</th>
+<th>Gestión</th>
 <th>Acciones</th>
 </tr>
 </thead>
 <tbody>
 
                     @forelse($usuarios as $usuario)
-<tr>
+<tr style="{{ $usuario->gestionado_spe ? 'background: #f0fdf4;' : '' }}">
+<td style="text-align: center;">
+<div class="spe-check {{ $usuario->gestionado_spe ? 'checked' : '' }}"
+
+                                 onclick="toggleSpe({{ $usuario->id }}, this)"
+
+                                 title="{{ $usuario->gestionado_spe ? 'Gestionado por ' . $usuario->gestionado_por . ' - ' . ($usuario->fecha_gestion_spe ? $usuario->fecha_gestion_spe->format('d/m/Y H:i') : '') : 'Marcar como gestionado' }}">
+
+                                @if($usuario->gestionado_spe)
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+
+                                @endif
+</div>
+</td>
 <td>{{ $usuario->numero_documento }}</td>
 <td>{{ $usuario->primer_nombre }} {{ $usuario->primer_apellido }}</td>
 <td>{{ $usuario->correo }}</td>
 <td>
 
-                @if($usuario->estado_academico === 'estudiante_activo')
+                            @if($usuario->estado_academico === 'estudiante_activo')
 <span class="badge activo">Estudiante activo</span>
+
                             @elseif($usuario->estado_academico === 'egresado')
 <span class="badge egresado">Egresado</span>
+
                             @elseif($usuario->estado_academico === 'egresado_activo')
 <span class="badge egresado">Egresado</span> <span class="badge activo">Activo</span>
+
                             @elseif($usuario->estado_academico === 'externo')
 <span class="badge externo">Externo</span>
+
                             @else
 <span class="badge pendiente">Pendiente</span>
+
                             @endif
 </td>
-<td>{{ $usuario->created_at->format('d/m/Y H:i') }}</td>
+<td>
+
+                            @if($usuario->gestionado_spe)
+<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br>
+<span style="font-size: 11px; color: #999;">{{ $usuario->gestionado_por }} - {{ $usuario->fecha_gestion_spe ? $usuario->fecha_gestion_spe->format('d/m/Y') : '' }}</span>
+
+                            @else
+<span style="font-size: 12px; color: #EF9F27; font-weight: 500;">Pendiente</span>
+
+                            @endif
+</td>
 <td><a href="{{ route('admin.usuario.detalle', $usuario->id) }}" class="btn-detalle">Ver detalle</a></td>
 </tr>
 
                     @empty
 <tr>
-<td colspan="6" class="empty-state">No se encontraron registros.</td>
+<td colspan="7" class="empty-state">No se encontraron registros.</td>
 </tr>
 
                     @endforelse
 </tbody>
 </table>
-
+ 
             @if($usuarios->hasPages())
 <div class="paginacion">
 <span>Mostrando {{ $usuarios->firstItem() }}-{{ $usuarios->lastItem() }} de {{ $usuarios->total() }} registros</span>
@@ -302,47 +350,143 @@
 <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
 </footer>
  
-<script>
-function exportarExcel() {
-    var params = new URLSearchParams(window.location.search);
-    var url = '{{ route("exportar.excel") }}?' + params.toString();
-    window.location.href = url;
-}
-</script>
+    <script>
 
-<script>
-var tiempoInactividad;
-function reiniciarTemporizador() {
-    clearTimeout(tiempoInactividad);
-    tiempoInactividad = setTimeout(function() {
-        var overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
-        var modal = document.createElement('div');
-        modal.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
-        modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-    },  3600000);
-}
-function cerrarSesion() {
-    var form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ route("admin.logout") }}';
-    var csrf = document.createElement('input');
-    csrf.type = 'hidden';
-    csrf.name = '_token';
-    csrf.value = '{{ csrf_token() }}';
-    form.appendChild(csrf);
-    document.body.appendChild(form);
-    form.submit();
-}
-document.addEventListener('mousemove', reiniciarTemporizador);
-document.addEventListener('keypress', reiniciarTemporizador);
-document.addEventListener('click', reiniciarTemporizador);
-document.addEventListener('scroll', reiniciarTemporizador);
-reiniciarTemporizador();
-</script>
+    function exportarExcel() {
 
+        var params = new URLSearchParams(window.location.search);
+
+        var url = '{{ route("exportar.excel") }}?' + params.toString();
+
+        window.location.href = url;
+
+    }
+</script>
+ 
+    <script>
+
+    function toggleSpe(id, el) {
+
+        fetch('/admin/usuarios/' + id + '/gestionar-spe', {
+
+            method: 'POST',
+
+            headers: {
+
+                'Content-Type': 'application/json',
+
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+
+            }
+
+        })
+
+        .then(function(r) { return r.json(); })
+
+        .then(function(data) {
+
+            if (data.success) {
+
+                var row = el.closest('tr');
+
+                var gestionCol = row.querySelectorAll('td')[5];
+
+                if (data.gestionado) {
+
+                    el.classList.add('checked');
+
+                    el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+
+                    el.title = 'Gestionado por ' + data.admin + ' - ' + data.fecha;
+
+                    row.style.background = '#f0fdf4';
+
+                    gestionCol.innerHTML = '<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br><span style="font-size: 11px; color: #999;">' + data.admin + ' - ' + data.fecha + '</span>';
+
+                } else {
+
+                    el.classList.remove('checked');
+
+                    el.innerHTML = '';
+
+                    el.title = 'Marcar como gestionado';
+
+                    row.style.background = '';
+
+                    gestionCol.innerHTML = '<span style="font-size: 12px; color: #EF9F27; font-weight: 500;">Pendiente</span>';
+
+                }
+
+            }
+
+        });
+
+    }
+</script>
+ 
+    <script>
+
+    var tiempoInactividad;
+
+    function reiniciarTemporizador() {
+
+        clearTimeout(tiempoInactividad);
+
+        tiempoInactividad = setTimeout(function() {
+
+            var overlay = document.createElement('div');
+
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+
+            var modal = document.createElement('div');
+
+            modal.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;text-align:center;max-width:400px;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
+
+            modal.innerHTML = '<h3 style="color:#1a3c6e;margin-bottom:10px;font-family:Segoe UI,sans-serif;">Sesión expirada</h3><p style="color:#555;font-size:14px;margin-bottom:20px;font-family:Segoe UI,sans-serif;">Su sesión ha expirado por inactividad.</p><button onclick="cerrarSesion()" style="background:#1a3c6e;color:white;border:none;padding:10px 30px;border-radius:6px;font-size:14px;cursor:pointer;font-family:Segoe UI,sans-serif;">Aceptar</button>';
+
+            overlay.appendChild(modal);
+
+            document.body.appendChild(overlay);
+
+        }, 3600000);
+
+    }
+
+    function cerrarSesion() {
+
+        var form = document.createElement('form');
+
+        form.method = 'POST';
+
+        form.action = '{{ route("admin.logout") }}';
+
+        var csrf = document.createElement('input');
+
+        csrf.type = 'hidden';
+
+        csrf.name = '_token';
+
+        csrf.value = '{{ csrf_token() }}';
+
+        form.appendChild(csrf);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    }
+
+    document.addEventListener('mousemove', reiniciarTemporizador);
+
+    document.addEventListener('keypress', reiniciarTemporizador);
+
+    document.addEventListener('click', reiniciarTemporizador);
+
+    document.addEventListener('scroll', reiniciarTemporizador);
+
+    reiniciarTemporizador();
+</script>
+ 
 </body>
 </html>
  
