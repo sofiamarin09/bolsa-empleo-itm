@@ -17,8 +17,6 @@
 
         .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
 
-        .page-title { color: #1a3c6e; font-size: 22px; font-weight: 600; margin-bottom: 24px; }
-
         .nav-links { display: flex; gap: 12px; margin-bottom: 28px; }
         .nav-link { padding: 8px 18px; border-radius: 6px; font-size: 13px; text-decoration: none; border: 1px solid #e8e8e8; color: #1a3c6e; background: white; transition: background 0.2s; }
         .nav-link:hover { background: #E6F1FB; }
@@ -32,7 +30,7 @@
         .form-group { margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; color: #444; display: block; margin-bottom: 6px; }
         .form-group label .required { color: #e53e3e; }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #ccc;
@@ -40,7 +38,7 @@
             font-size: 14px;
             font-family: 'Segoe UI', sans-serif;
         }
-        .form-group input:focus { outline: none; border-color: #2d6ab8; box-shadow: 0 0 0 3px rgba(45,106,184,0.12); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #2d6ab8; box-shadow: 0 0 0 3px rgba(45,106,184,0.12); }
         .form-group .hint { font-size: 11px; color: #999; margin-top: 4px; }
 
         .btn-crear {
@@ -66,23 +64,43 @@
             border-bottom: 1px solid #f0f0f0;
         }
         .admin-item:last-child { border-bottom: none; }
-        .admin-info h4 { font-size: 14px; color: #1a3c6e; font-weight: 600; margin-bottom: 2px; }
+        .admin-info h4 { font-size: 14px; color: #1a3c6e; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .admin-info p { font-size: 12px; color: #666; }
         .admin-info .fecha { font-size: 11px; color: #999; margin-top: 2px; }
 
-        .badge-yo { display: inline-block; background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; margin-left: 6px; }
+        .badge-yo { display: inline-block; background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+        .badge-rol { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+        .badge-rol.superadmin { background: #ede9fe; color: #5b21b6; }
+        .badge-rol.gestor { background: #e0f2fe; color: #0369a1; }
+        .badge-estado { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; margin-top: 4px; }
+        .badge-estado.activo { background: #d1fae5; color: #065f46; }
+        .badge-estado.inactivo { background: #f3f4f6; color: #6b7280; }
 
-        .btn-eliminar {
+        .btn-inactivar {
             background: none;
-            border: 1px solid #e53e3e;
-            color: #e53e3e;
+            border: 1px solid #d97706;
+            color: #d97706;
             padding: 6px 14px;
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
             transition: background 0.2s;
+            white-space: nowrap;
         }
-        .btn-eliminar:hover { background: #fee2e2; }
+        .btn-inactivar:hover { background: #fef3c7; }
+
+        .btn-activar {
+            background: none;
+            border: 1px solid #059669;
+            color: #059669;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-activar:hover { background: #d1fae5; }
 
         .alert-success {
             background: #d1fae5;
@@ -104,7 +122,6 @@
         }
 
         .error-msg { color: #e53e3e; font-size: 12px; margin-top: 4px; }
-
         .empty-state { text-align: center; color: #999; font-size: 14px; padding: 30px 0; }
 
         .footer { background: #1a3c6e; color: white; text-align: center; padding: 20px; margin-top: 40px; }
@@ -167,6 +184,15 @@
                         @error('correo') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
+                        <label>Rol <span class="required">*</span></label>
+                        <select name="rol" required>
+                            <option value="">Seleccione un rol</option>
+                            <option value="gestor" {{ old('rol') === 'gestor' ? 'selected' : '' }}>Gestor</option>
+                            <option value="superadmin" {{ old('rol') === 'superadmin' ? 'selected' : '' }}>SuperAdmin</option>
+                        </select>
+                        @error('rol') <span class="error-msg">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group">
                         <label>Contraseña <span class="required">*</span></label>
                         <input type="password" name="password" autocomplete="one-time-code" minlength="8" oninvalid="this.setCustomValidity('La contraseña debe tener mínimo 8 caracteres')" oninput="this.setCustomValidity('')" required>
                         @error('password') <span class="error-msg">{{ $message }}</span> @enderror
@@ -191,15 +217,23 @@
                                 @if($admin->id === $adminActualId)
                                     <span class="badge-yo">Tú</span>
                                 @endif
+                                <span class="badge-rol {{ $admin->rol }}">
+                                    {{ $admin->rol === 'superadmin' ? 'SuperAdmin' : 'Gestor' }}
+                                </span>
                             </h4>
                             <p>{{ $admin->correo }}</p>
                             <p class="fecha">Creado: {{ $admin->created_at ? $admin->created_at->format('d/m/Y H:i') : 'N/A' }}</p>
+                            <span class="badge-estado {{ $admin->activo ? 'activo' : 'inactivo' }}">
+                                {{ $admin->activo ? 'Activo' : 'Inactivo' }}
+                            </span>
                         </div>
-                        @if($admin->id !== $adminActualId && $admin->id !== 1)
-                        <form method="POST" action="{{ route('admin.administradores.eliminar', $admin->id) }}" onsubmit="return confirm('¿Está seguro de eliminar a {{ $admin->nombre }}?');">
+                        @if($admin->id !== $adminActualId)
+                        <form method="POST" action="{{ route('admin.administradores.toggle-activo', $admin->id) }}"
+                              onsubmit="return confirm('{{ $admin->activo ? '¿Desea inactivar a ' . addslashes($admin->nombre) . '?' : '¿Desea activar a ' . addslashes($admin->nombre) . '?' }}')">
                             @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                            <button type="submit" class="{{ $admin->activo ? 'btn-inactivar' : 'btn-activar' }}">
+                                {{ $admin->activo ? 'Inactivar' : 'Activar' }}
+                            </button>
                         </form>
                         @endif
                     </li>

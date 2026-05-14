@@ -162,7 +162,9 @@
         <div class="nav-links">
 <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
 <a href="{{ route('admin.usuarios') }}" class="nav-link active">Usuarios</a>
+@if(Session::get('admin_rol') === 'superadmin')
 <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
+@endif
 <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
 <a href="{{ route('admin.importar') }}" class="nav-link">Importar Excel</a>
 </div>
@@ -185,8 +187,11 @@
 </label>
 <label style="font-size: 12px; font-weight: 400; display: flex; align-items: center; gap: 5px; cursor: pointer; margin: 0; white-space: nowrap;">
 <input type="checkbox" name="estado[]" value="egresado" style="width: 14px; height: 14px;" {{ is_array(request('estado')) && in_array('egresado', request('estado')) ? 'checked' : '' }}>
-
                                 Egresado
+</label>
+<label style="font-size: 12px; font-weight: 400; display: flex; align-items: center; gap: 5px; cursor: pointer; margin: 0; white-space: nowrap;">
+<input type="checkbox" name="estado[]" value="egresado_activo" style="width: 14px; height: 14px;" {{ is_array(request('estado')) && in_array('egresado_activo', request('estado')) ? 'checked' : '' }}>
+                                Egresado Activo
 </label>
 <label style="font-size: 12px; font-weight: 400; display: flex; align-items: center; gap: 5px; cursor: pointer; margin: 0; white-space: nowrap;">
 <input type="checkbox" name="estado[]" value="externo" style="width: 14px; height: 14px;" {{ is_array(request('estado')) && in_array('externo', request('estado')) ? 'checked' : '' }}>

@@ -65,7 +65,9 @@
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
             <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
+            @if(Session::get('admin_rol') === 'superadmin')
             <a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
+            @endif
             <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
             <a href="{{ route('admin.importar') }}" class="nav-link active">Importar Excel</a>
         </div>

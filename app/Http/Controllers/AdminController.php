@@ -45,6 +45,11 @@ class AdminController extends Controller
 
     public function listarAdmins()
     {
+        if (Session::get('admin_rol') !== 'superadmin') {
+            return redirect()->route('admin.dashboard')
+                ->withErrors(['error' => 'No tiene permisos para acceder a esta sección.']);
+        }
+
         $administradores = Administrador::orderBy('created_at', 'desc')->get();
         $adminActualId = Session::get('admin_id');
 
@@ -53,9 +58,15 @@ class AdminController extends Controller
 
     public function crearAdmin(Request $request)
     {
+        if (Session::get('admin_rol') !== 'superadmin') {
+            return redirect()->route('admin.dashboard')
+                ->withErrors(['error' => 'No tiene permisos para realizar esta acción.']);
+        }
+
         $request->validate([
             'nombre' => ['required', 'string', 'min:2', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-]+$/'],
             'correo' => ['required', 'email', 'max:150', 'unique:administradores,correo', 'regex:/^[a-zA-Z0-9._%+\-]+@itm\.edu\.co$/'],
+            'rol' => 'required|in:superadmin,gestor',
             'password' => 'required|string|min:8',
             'password_confirmation' => 'required|same:password',
         ], [
@@ -65,51 +76,72 @@ class AdminController extends Controller
             'correo.required' => 'El correo es obligatorio.',
             'correo.unique' => 'Este correo ya está registrado como administrador.',
             'correo.regex' => 'Solo se permiten correos institucionales @itm.edu.co.',
+            'rol.required' => 'Seleccione un rol.',
+            'rol.in' => 'El rol seleccionado no es válido.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener mínimo 8 caracteres.',
             'password_confirmation.same' => 'Las contraseñas no coinciden.',
         ]);
 
+        if ($request->rol === 'superadmin') {
+            $superAdminsActivos = Administrador::where('rol', 'superadmin')->where('activo', true)->count();
+            if ($superAdminsActivos >= 2) {
+                return back()->withErrors(['error' => 'Ya existen 2 SuperAdmins activos. Debe inactivar uno antes de crear otro.']);
+            }
+        }
+
         $admin = Administrador::create([
-            'nombre' => $request->nombre,
-            'correo' => strtolower($request->correo),
+            'nombre'        => $request->nombre,
+            'correo'        => strtolower($request->correo),
             'password_hash' => Hash::make($request->password),
+            'rol'           => $request->rol,
+            'activo'        => true,
         ]);
 
         RegistroAuditoria::create([
-            'tipo_evento' => 'crear_admin',
-            'descripcion' => 'Administrador creado: ' . $admin->nombre . ' (' . $admin->correo . ')',
-            'ip_address' => $request->ip(),
+            'tipo_evento'      => 'crear_admin',
+            'descripcion'      => 'Administrador creado: ' . $admin->nombre . ' (' . $admin->correo . ') - Rol: ' . $admin->rol,
+            'ip_address'       => $request->ip(),
             'administrador_id' => Session::get('admin_id'),
         ]);
 
         return redirect()->route('admin.administradores')->with('success', 'Administrador creado exitosamente.');
     }
 
-    public function eliminarAdmin(Request $request, $id)
+    public function toggleActivoAdmin(Request $request, $id)
     {
-        if (Session::get('admin_id') == $id) {
-            return redirect()->route('admin.administradores')->withErrors(['error' => 'No puede eliminarse a sí mismo.']);
+        if (Session::get('admin_rol') !== 'superadmin') {
+            return redirect()->route('admin.dashboard')
+                ->withErrors(['error' => 'No tiene permisos para realizar esta acción.']);
         }
 
-        if ($id == 1) {
-            return redirect()->route('admin.administradores')->withErrors(['error' => 'El administrador principal no puede ser eliminado.']);
+        if (Session::get('admin_id') == $id) {
+            return redirect()->route('admin.administradores')
+                ->withErrors(['error' => 'No puede activar o desactivar su propia cuenta.']);
         }
 
         $admin = Administrador::findOrFail($id);
-        RegistroAuditoria::where('administrador_id', $id)->update(['administrador_id' => null]);
-        $nombreAdmin = $admin->nombre;
-        $correoAdmin = $admin->correo;
-        $admin->delete();
+        $nuevoEstado = !$admin->activo;
+
+        if ($nuevoEstado && $admin->rol === 'superadmin') {
+            $superAdminsActivos = Administrador::where('rol', 'superadmin')->where('activo', true)->count();
+            if ($superAdminsActivos >= 2) {
+                return redirect()->route('admin.administradores')
+                    ->withErrors(['error' => 'Ya existen 2 SuperAdmins activos. Debe inactivar uno antes de activar otro.']);
+            }
+        }
+
+        $admin->update(['activo' => $nuevoEstado]);
 
         RegistroAuditoria::create([
-            'tipo_evento' => 'eliminar_admin',
-            'descripcion' => 'Administrador eliminado: ' . $nombreAdmin . ' (' . $correoAdmin . ')',
-            'ip_address' => $request->ip(),
+            'tipo_evento'      => $nuevoEstado ? 'activar_admin' : 'inactivar_admin',
+            'descripcion'      => ($nuevoEstado ? 'Administrador activado: ' : 'Administrador inactivado: ') . $admin->nombre . ' (' . $admin->correo . ')',
+            'ip_address'       => $request->ip(),
             'administrador_id' => Session::get('admin_id'),
         ]);
 
-        return redirect()->route('admin.administradores')->with('success', 'Administrador eliminado exitosamente.');
+        $mensaje = $nuevoEstado ? 'Administrador activado exitosamente.' : 'Administrador inactivado exitosamente.';
+        return redirect()->route('admin.administradores')->with('success', $mensaje);
     }
 
     public function listarUsuarios(Request $request)
