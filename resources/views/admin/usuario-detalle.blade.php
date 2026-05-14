@@ -143,7 +143,7 @@
                 </div>
                 <div class="field" style="margin-top: 12px;">
                     <p class="label">Teléfono</p>
-                    <p class="value">{{ $usuario->telefono_celular }}</p>
+                    <p class="value">{{ $usuario->telefono ?? 'N/A' }}</p>
                 </div>
                 <div class="field-grid" style="margin-top: 12px;">
                     <div class="field">

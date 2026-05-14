@@ -34,12 +34,12 @@ class AdminLoginController extends Controller
 
         $admin = Administrador::where('correo', strtolower($request->correo))->first();
 
-        if (!$admin || !Hash::check($request->password, $admin->password_hash)) {
-            return back()->withErrors(['error' => 'Credenciales incorrectas. Verifique su correo y contraseña.']);
+        if ($admin && !$admin->activo) {
+            return back()->withErrors(['error' => 'Su cuenta se encuentra inactiva. Contacte a un SuperAdmin para reactivarla.']);
         }
 
-        if (!$admin->activo) {
-            return back()->withErrors(['error' => 'Su cuenta está desactivada. Contacte a un SuperAdmin.']);
+        if (!$admin || !Hash::check($request->password, $admin->password_hash)) {
+            return back()->withErrors(['error' => 'Credenciales incorrectas. Verifique su correo y contraseña.']);
         }
 
         Session::put('admin_id', $admin->id);

@@ -163,7 +163,7 @@
 <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
 <a href="{{ route('admin.usuarios') }}" class="nav-link active">Usuarios</a>
 @if(Session::get('admin_rol') === 'superadmin')
-<a href="{{ route('admin.administradores') }}" class="nav-link">Administradores</a>
+<a href="{{ route('admin.administradores') }}" class="nav-link">Administrador</a>
 @endif
 <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
 <a href="{{ route('admin.importar') }}" class="nav-link">Importar Excel</a>
@@ -244,7 +244,7 @@
 <th>Nombre</th>
 <th>Correo</th>
 <th>Tipo de usuario ITM</th>
-<th>Gestión</th>
+<th>Gestión SPE</th>
 <th>Acciones</th>
 </tr>
 </thead>
