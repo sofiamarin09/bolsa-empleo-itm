@@ -40,7 +40,7 @@
 </div>
 <div class="footer">
 <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
-<p>Campus Fraternidad &mdash; {{ date('Y') }}</p>
+<p>Campus Fraternidad</p>
 <p>Este es un correo automático, por favor no responda a este mensaje.</p>
 </div>
 </div>

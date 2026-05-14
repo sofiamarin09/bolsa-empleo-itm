@@ -18,6 +18,7 @@ class AdminController extends Controller
         $totalRegistros = UsuarioAspirante::count();
         $estudiantesActivos = UsuarioAspirante::where('estado_academico', 'estudiante_activo')->count();
         $egresados = UsuarioAspirante::where('estado_academico', 'egresado')->count();
+        $egresadosActivos = UsuarioAspirante::where('estado_academico', 'egresado_activo')->count();
         $externos = UsuarioAspirante::where('estado_academico', 'externo')->count();
         $pendientes = UsuarioAspirante::where('estado_academico', 'pendiente')->count();
 
@@ -33,6 +34,7 @@ class AdminController extends Controller
             'totalRegistros',
             'estudiantesActivos',
             'egresados',
+            'egresadosActivos',
             'externos',
             'pendientes',
             'correosEnviados',
@@ -267,9 +269,10 @@ class AdminController extends Controller
 
         $estudiantesActivos = (clone $query)->where('estado_academico', 'estudiante_activo')->count();
         $egresados = (clone $query)->where('estado_academico', 'egresado')->count();
+        $egresadosActivos = (clone $query)->where('estado_academico', 'egresado_activo')->count();
         $externos = (clone $query)->where('estado_academico', 'externo')->count();
         $pendientes = (clone $query)->where('estado_academico', 'pendiente')->count();
-        $totalRegistros = $estudiantesActivos + $egresados + $externos + $pendientes;
+        $totalRegistros = (clone $query)->count();
 
         $registrosPorMes = (clone $query)->selectRaw("TO_CHAR(created_at, 'YYYY-MM') as mes, COUNT(*) as total")
             ->groupBy('mes')
@@ -294,16 +297,14 @@ class AdminController extends Controller
             ->orderBy('mes')
             ->get();
 
-        $validacionQuery = ValidacionAcademica::whereIn('usuario_id', $usuarioIds);
-
-        $validadosItm = (clone $validacionQuery)->whereIn('resultado', ['estudiante_activo', 'egresado'])->count();
-        $noPertenece = (clone $validacionQuery)->where('resultado', 'externo')->count();
-        $pendientesVal = $totalRegistros - $validadosItm - $noPertenece;
-        if ($pendientesVal < 0) $pendientesVal = 0;
+        $validadosItm = $estudiantesActivos + $egresados + $egresadosActivos;
+        $noPertenece = $externos;
+        $pendientesVal = $pendientes;
 
         return view('admin.graficas', compact(
             'estudiantesActivos',
             'egresados',
+            'egresadosActivos',
             'externos',
             'pendientes',
             'totalRegistros',

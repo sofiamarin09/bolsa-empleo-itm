@@ -273,7 +273,7 @@
  
     <footer class="footer">
 <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
-<p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
+<p>Campus Fraternidad</p>
 </footer>
  
     <script>

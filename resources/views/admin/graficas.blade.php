@@ -43,13 +43,14 @@
         .btn-limpiar { background: white; color: #666; padding: 9px 20px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; cursor: pointer; text-decoration: none; }
         .btn-limpiar:hover { background: #f5f5f5; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
         .stat-card { background: white; border-radius: 10px; padding: 18px; border: 1px solid #e8e8e8; text-align: center; }
         .stat-card .label { font-size: 12px; color: #666; margin-bottom: 6px; }
         .stat-card .value { font-size: 26px; font-weight: 600; }
         .stat-card .value.total { color: #1a3c6e; }
         .stat-card .value.activo { color: #065f46; }
         .stat-card .value.egresado { color: #0C447C; }
+        .stat-card .value.egresado-activo { color: #6366f1; }
         .stat-card .value.externo { color: #854F0B; }
 
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
@@ -190,6 +191,10 @@
                 <p class="value egresado">{{ $egresados }}</p>
             </div>
             <div class="stat-card">
+                <p class="label">Egresados activos</p>
+                <p class="value egresado-activo">{{ $egresadosActivos }}</p>
+            </div>
+            <div class="stat-card">
                 <p class="label">Externos</p>
                 <p class="value externo">{{ $externos }}</p>
             </div>
@@ -231,7 +236,7 @@
 
     <footer class="footer">
         <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
-        <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
+        <p>Campus Fraternidad</p>
     </footer>
 
     <script>
@@ -249,10 +254,10 @@
     new Chart(document.getElementById('chartTorta'), {
         type: 'doughnut',
         data: {
-            labels: ['Estudiantes activos', 'Egresados', 'Externos', 'Pendientes'],
+            labels: ['Estudiantes activos', 'Egresados', 'Egresados activos', 'Externos', 'Pendientes'],
             datasets: [{
-                data: [{{ $estudiantesActivos }}, {{ $egresados }}, {{ $externos }}, {{ $pendientes }}],
-                backgroundColor: ['#059669', '#378ADD', '#EF9F27', '#B4B2A9'],
+                data: [{{ $estudiantesActivos }}, {{ $egresados }}, {{ $egresadosActivos }}, {{ $externos }}, {{ $pendientes }}],
+                backgroundColor: ['#059669', '#378ADD', '#6366f1', '#EF9F27', '#B4B2A9'],
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
