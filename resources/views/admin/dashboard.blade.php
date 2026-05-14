@@ -42,6 +42,8 @@
 
         .stat-card.egresado .value { color: #0C447C; }
 
+        .stat-card.egresado-activo .value { color: #6366f1; }
+
         .stat-card.externo .value { color: #854F0B; }
 
         .stat-card.pendiente .value { color: #666; }
@@ -160,6 +162,10 @@
 <p class="label">Egresados</p>
 <p class="value">{{ $egresados }}</p>
 </div>
+<div class="stat-card egresado-activo">
+<p class="label">Egresados activos</p>
+<p class="value">{{ $egresadosActivos }}</p>
+</div>
 <div class="stat-card externo">
 <p class="label">Usuarios externos</p>
 <p class="value">{{ $externos }}</p>
@@ -269,7 +275,7 @@
  
     <footer class="footer">
 <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
-<p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
+<p>Campus Fraternidad</p>
 </footer>
  
     <script>

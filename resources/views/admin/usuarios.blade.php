@@ -323,16 +323,29 @@
 
                     @endif
  
-                    @foreach($usuarios->getUrlRange(1, $usuarios->lastPage()) as $page => $url)
-
-                        @if($page == $usuarios->currentPage())
-<span class="current">{{ $page }}</span>
-
-                        @else
-<a href="{{ $url }}">{{ $page }}</a>
-
+                    @php
+                        $current = $usuarios->currentPage();
+                        $last = $usuarios->lastPage();
+                        $window = 2;
+                        $pages = collect();
+                        $pages->push(1);
+                        for ($i = max(2, $current - $window); $i <= min($last - 1, $current + $window); $i++) {
+                            $pages->push($i);
+                        }
+                        if ($last > 1) $pages->push($last);
+                        $pages = $pages->unique()->sort()->values();
+                    @endphp
+                    @php $prevPage = null; @endphp
+                    @foreach($pages as $page)
+                        @if($prevPage !== null && $page - $prevPage > 1)
+                            <span style="opacity:0.5;padding:0 4px;">…</span>
                         @endif
-
+                        @if($page == $current)
+<span class="current">{{ $page }}</span>
+                        @else
+<a href="{{ $usuarios->url($page) }}">{{ $page }}</a>
+                        @endif
+                        @php $prevPage = $page; @endphp
                     @endforeach
  
                     @if($usuarios->hasMorePages())
@@ -352,7 +365,7 @@
  
     <footer class="footer">
 <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
-<p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
+<p>Campus Fraternidad</p>
 </footer>
  
     <script>
