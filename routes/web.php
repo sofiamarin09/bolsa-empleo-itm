@@ -37,6 +37,11 @@ Route::get('/admin/login', [AdminLoginController::class, 'showLogin'])->name('ad
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
+Route::get('/admin/forgot-password', [AdminLoginController::class, 'showForgotPassword'])->name('admin.forgot-password');
+Route::post('/admin/forgot-password', [AdminLoginController::class, 'sendResetLink'])->name('admin.forgot-password.send');
+Route::get('/admin/reset-password/{token}', [AdminLoginController::class, 'showResetPassword'])->name('admin.reset-password.form');
+Route::post('/admin/reset-password', [AdminLoginController::class, 'resetPassword'])->name('admin.reset-password');
+
 Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/usuarios', [AdminController::class, 'listarUsuarios'])->name('admin.usuarios');
@@ -44,7 +49,7 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/usuarios/{id}', [AdminController::class, 'verUsuario'])->name('admin.usuario.detalle');
     Route::get('/admin/administradores', [AdminController::class, 'listarAdmins'])->name('admin.administradores');
     Route::post('/admin/administradores', [AdminController::class, 'crearAdmin'])->name('admin.administradores.crear');
-    Route::delete('/admin/administradores/{id}', [AdminController::class, 'eliminarAdmin'])->name('admin.administradores.eliminar');
+    Route::post('/admin/administradores/{id}/toggle-activo', [AdminController::class, 'toggleActivoAdmin'])->name('admin.administradores.toggle-activo');
     Route::get('/admin/graficas', [AdminController::class, 'graficas'])->name('admin.graficas');
     Route::get('/admin/importar', [AdminController::class, 'showImportar'])->name('admin.importar');
     Route::post('/admin/importar/subir', [AdminController::class, 'subirExcel'])->name('admin.importar.subir');
@@ -59,6 +64,7 @@ Route::middleware(['admin.auth'])->group(function () {
         $estado = $request->query('estado');
         $fechaDesde = $request->query('fecha_desde');
         $fechaHasta = $request->query('fecha_hasta');
+        $gestionSpe = $request->query('gestion_spe');
 
         if (is_array($estado)) {
             $estado = implode(',', $estado);
@@ -67,7 +73,7 @@ Route::middleware(['admin.auth'])->group(function () {
         $nombreArchivo = 'usuarios_itm_' . date('Y-m-d_His') . '.xlsx';
 
         return Excel::download(
-            new UsuariosExport($estado, $fechaDesde, $fechaHasta),
+            new UsuariosExport($estado, $fechaDesde, $fechaHasta, $gestionSpe),
             $nombreArchivo
         );
     })->name('exportar.excel');

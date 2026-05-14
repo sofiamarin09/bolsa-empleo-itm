@@ -104,6 +104,8 @@
             <button type="submit" class="btn-login">Iniciar sesión</button>
         </form>
 
+        <a href="{{ route('admin.forgot-password') }}" style="display:block; text-align:center; margin-top:14px; font-size:13px; color:#1a3c6e; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+
         <a href="/" class="back-link">Volver al inicio</a>
     </div>
 

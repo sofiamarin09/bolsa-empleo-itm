@@ -13,14 +13,21 @@ class Administrador extends Model
         'nombre',
         'correo',
         'password_hash',
+        'rol',
+        'activo',
+        'password_reset_token',
+        'password_reset_expires_at',
     ];
 
     protected $hidden = [
         'password_hash',
+        'password_reset_token',
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
+        'created_at'                 => 'datetime',
+        'activo'                     => 'boolean',
+        'password_reset_expires_at'  => 'datetime',
     ];
 
     public function auditorias()

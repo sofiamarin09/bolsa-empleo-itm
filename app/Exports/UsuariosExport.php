@@ -11,15 +11,17 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 {
-    protected $estado;
-    protected $fechaDesde;
-    protected $fechaHasta;
+    protected ?string $estado;
+    protected ?string $fechaDesde;
+    protected ?string $fechaHasta;
+    protected ?string $gestionSpe;
 
-    public function __construct($estado = null, $fechaDesde = null, $fechaHasta = null)
+    public function __construct($estado = null, $fechaDesde = null, $fechaHasta = null, $gestionSpe = null)
     {
         $this->estado = $estado;
         $this->fechaDesde = $fechaDesde;
         $this->fechaHasta = $fechaHasta;
+        $this->gestionSpe = $gestionSpe;
     }
 
     public function query()
@@ -37,6 +39,12 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
         if ($this->fechaHasta) {
             $query->whereDate('created_at', '<=', $this->fechaHasta);
+        }
+
+        if ($this->gestionSpe === 'gestionado') {
+            $query->where('gestionado_spe', true);
+        } elseif ($this->gestionSpe === 'pendiente') {
+            $query->where('gestionado_spe', false);
         }
 
         return $query->orderBy('created_at', 'desc');
