@@ -140,7 +140,8 @@ class AdminController extends Controller
             'administrador_id' => Session::get('admin_id'),
         ]);
 
-        $mensaje = $nuevoEstado ? 'Administrador activado exitosamente.' : 'Administrador inactivado exitosamente.';
+        $rolLabel = $admin->rol === 'superadmin' ? 'SuperAdmin' : 'Gestor';
+        $mensaje = $nuevoEstado ? "{$rolLabel} activado exitosamente." : "{$rolLabel} inactivado exitosamente.";
         return redirect()->route('admin.administradores')->with('success', $mensaje);
     }
 
@@ -446,6 +447,18 @@ class AdminController extends Controller
 
                     if (isset($datos['correo'])) {
                         $datos['correo'] = mb_strtolower(trim($datos['correo']));
+                    }
+
+                    if (isset($datos['telefono'])) {
+                        $tel = $datos['telefono'];
+                        // Convierte float/int de PhpSpreadsheet o notación científica a string limpio
+                        if (is_float($tel) || is_int($tel)) {
+                            $datos['telefono'] = (string)(int)$tel;
+                        } elseif (is_string($tel) && preg_match('/^[\d.]+([eE][+\-]?\d+)?$/', $tel)) {
+                            $datos['telefono'] = (string)(int)(float)$tel;
+                        } else {
+                            $datos['telefono'] = preg_replace('/[^\d+]/', '', $tel);
+                        }
                     }
 
                     if (isset($datos['fecha_nacimiento']) && !empty($datos['fecha_nacimiento'])) {

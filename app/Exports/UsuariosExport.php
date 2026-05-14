@@ -68,6 +68,7 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             'Departamento',
             'Municipio',
             'Tipo de usuario ITM',
+            'Gestión SPE',
             'Fecha de registro',
         ];
     }
@@ -90,6 +91,7 @@ class UsuariosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $usuario->departamento ?? '',
             $usuario->municipio ?? '',
             $this->formatoEstado($usuario->estado_academico),
+            $usuario->gestionado_spe ? 'Gestionado' : 'Pendiente',
             $usuario->created_at->format('d/m/Y H:i'),
         ];
     }

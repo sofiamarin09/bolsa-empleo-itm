@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administradores - ITM Bolsa de empleo</title>
+    <title>Administrador - ITM Bolsa de empleo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
@@ -102,6 +102,20 @@
         }
         .btn-activar:hover { background: #d1fae5; }
 
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; border-radius: 10px; padding: 28px 32px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .modal-titulo { color: #1a3c6e; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .modal-mensaje { color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+        .modal-acciones { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-modal-cancelar { background: white; color: #666; padding: 9px 20px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; cursor: pointer; }
+        .btn-modal-cancelar:hover { background: #f5f5f5; }
+        .btn-modal-confirmar { padding: 9px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: white; }
+        .btn-modal-confirmar.inactivar { background: #d97706; }
+        .btn-modal-confirmar.inactivar:hover { background: #b45309; }
+        .btn-modal-confirmar.activar { background: #059669; }
+        .btn-modal-confirmar.activar:hover { background: #047857; }
+
         .alert-success {
             background: #d1fae5;
             border: 1px solid #a7f3d0;
@@ -151,7 +165,7 @@
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
             <a href="{{ route('admin.usuarios') }}" class="nav-link">Usuarios</a>
-            <a href="{{ route('admin.administradores') }}" class="nav-link active">Administradores</a>
+            <a href="{{ route('admin.administradores') }}" class="nav-link active">Administrador</a>
             <a href="{{ route('admin.graficas') }}" class="nav-link">Gráficas</a>
             <a href="{{ route('admin.importar') }}" class="nav-link">Importar Excel</a>
         </div>
@@ -167,7 +181,7 @@
         <div class="content-grid">
 
             <div class="card">
-                <h3>Crear nuevo administrador</h3>
+                <h3>Crear nuevo Usuario</h3>
                 <form method="POST" action="{{ route('admin.administradores.crear') }}" autocomplete="off">
                     @csrf
                     <input type="text" name="fake_user" style="display:none;" aria-hidden="true">
@@ -202,7 +216,7 @@
                         <input type="password" name="password_confirmation" autocomplete="one-time-code" minlength="8" oninvalid="this.setCustomValidity('Confirme la contraseña')" oninput="this.setCustomValidity('')" onpaste="return false" required>
                         @error('password_confirmation') <span class="error-msg">{{ $message }}</span> @enderror
                     </div>
-                    <button type="submit" class="btn-crear">Crear administrador</button>
+                    <button type="submit" class="btn-crear">Crear Usuario</button>
                 </form>
             </div>
 
@@ -228,10 +242,15 @@
                             </span>
                         </div>
                         @if($admin->id !== $adminActualId)
-                        <form method="POST" action="{{ route('admin.administradores.toggle-activo', $admin->id) }}"
-                              onsubmit="return confirm('{{ $admin->activo ? '¿Desea inactivar a ' . addslashes($admin->nombre) . '?' : '¿Desea activar a ' . addslashes($admin->nombre) . '?' }}')">
+                        <form method="POST" action="{{ route('admin.administradores.toggle-activo', $admin->id) }}" id="form-toggle-{{ $admin->id }}">
                             @csrf
-                            <button type="submit" class="{{ $admin->activo ? 'btn-inactivar' : 'btn-activar' }}">
+                            <button type="button"
+                                class="{{ $admin->activo ? 'btn-inactivar' : 'btn-activar' }}"
+                                onclick="abrirModal(
+                                    'form-toggle-{{ $admin->id }}',
+                                    '{{ $admin->activo ? '¿Desea inactivar a ' . addslashes($admin->nombre) . '? Su cuenta quedará deshabilitada.' : '¿Desea activar a ' . addslashes($admin->nombre) . '? Podrá iniciar sesión nuevamente.' }}',
+                                    '{{ $admin->activo ? 'inactivar' : 'activar' }}'
+                                )">
                                 {{ $admin->activo ? 'Inactivar' : 'Activar' }}
                             </button>
                         </form>
@@ -247,10 +266,48 @@
 
     </div>
 
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <p class="modal-titulo">Confirmar acción</p>
+            <p class="modal-mensaje" id="modal-mensaje"></p>
+            <div class="modal-acciones">
+                <button type="button" class="btn-modal-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button type="button" class="btn-modal-confirmar" id="btn-modal-confirmar" onclick="confirmarAccion()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad &mdash; &copy; {{ date('Y') }}</p>
     </footer>
+
+    <script>
+    var formPendiente = null;
+
+    function abrirModal(formId, mensaje, accion) {
+        formPendiente = document.getElementById(formId);
+        document.getElementById('modal-mensaje').textContent = mensaje;
+        var btn = document.getElementById('btn-modal-confirmar');
+        btn.className = 'btn-modal-confirmar ' + accion;
+        btn.textContent = accion === 'inactivar' ? 'Inactivar' : 'Activar';
+        document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modal-overlay').classList.remove('active');
+        formPendiente = null;
+    }
+
+    function confirmarAccion() {
+        if (formPendiente) formPendiente.submit();
+        cerrarModal();
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModal();
+    });
+    </script>
 
     <script>
     document.querySelectorAll('input:not([type="checkbox"]):not([type="date"]):not([style*="display:none"])').forEach(function(input) {
