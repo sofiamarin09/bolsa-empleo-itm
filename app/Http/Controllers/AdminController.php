@@ -11,6 +11,7 @@ use App\Models\RegistroAuditoria;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -224,14 +225,20 @@ class AdminController extends Controller
         'gestionado_por'    => Session::get('admin_nombre'),
     ]);
 
-    try {
-        Mail::send('emails.confirmacion-spe', ['usuario' => $usuario], function ($message) use ($usuario) {
-            $message->to($usuario->correo, $usuario->primer_nombre . ' ' . $usuario->primer_apellido)
-                    ->subject('Confirmación de registro en el Servicio Público de Empleo');
-        });
-    } catch (\Exception $e) {
-        // El SPE ya se guardó; el fallo de correo no revierte la acción
-    }
+    $correoUsuario   = $usuario->correo;
+    $nombreUsuario   = $usuario->primer_nombre . ' ' . $usuario->primer_apellido;
+
+    app()->terminating(function () use ($correoUsuario, $nombreUsuario, $usuario) {
+        try {
+            Mail::send('emails.confirmacion-spe', ['usuario' => $usuario], function ($message) use ($correoUsuario, $nombreUsuario) {
+                $message->to($correoUsuario, $nombreUsuario)
+                        ->subject('Confirmación de registro en el Servicio Público de Empleo')
+                        ->replyTo('bolsaempleoitm@gmail.com', 'ITM - Bolsa de empleo');
+            });
+        } catch (\Exception $e) {
+            Log::error('Error correo SPE: ' . $e->getMessage());
+        }
+    });
 
     RegistroAuditoria::create([
         'tipo_evento'      => 'gestion_spe',
