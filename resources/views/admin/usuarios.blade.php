@@ -381,29 +381,26 @@
     <script>
 
     function toggleSpe(id, el) {
-
         fetch('/admin/usuarios/' + id + '/gestionar-spe', {
-function toggleSpe(id, el) {
-    fetch('/admin/usuarios/' + id + '/gestionar-spe', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-        if (data.success) {
-            var row = el.closest('tr');
-            var gestionCol = row.querySelectorAll('td')[5];
-            el.classList.add('checked');
-            el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
-            el.title = 'Gestionado por ' + data.admin + ' - ' + data.fecha;
-            row.style.background = '#f0fdf4';
-            gestionCol.innerHTML = '<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br><span style="font-size: 11px; color: #999;">' + data.admin + ' - ' + data.fecha + '</span>';
-        }
-    });
-}
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                var row = el.closest('tr');
+                var gestionCol = row.querySelectorAll('td')[5];
+                el.classList.add('checked');
+                el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+                el.title = 'Gestionado por ' + data.admin + ' - ' + data.fecha;
+                row.style.background = '#f0fdf4';
+                gestionCol.innerHTML = '<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br><span style="font-size: 11px; color: #999;">' + data.admin + ' - ' + data.fecha + '</span>';
+            }
+        });
+    }
 
     var tiempoInactividad;
 
