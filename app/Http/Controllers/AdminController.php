@@ -10,6 +10,7 @@ use App\Models\Administrador;
 use App\Models\RegistroAuditoria;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -209,32 +210,43 @@ class AdminController extends Controller
 
         return view('admin.usuario-detalle', compact('usuario'));
     }
+   public function gestionarSpe(Request $request, $id)
+{
+    $usuario = UsuarioAspirante::findOrFail($id);
 
-    public function gestionarSpe(Request $request, $id)
-    {
-        $usuario = UsuarioAspirante::findOrFail($id);
-        $nuevoEstado = !$usuario->gestionado_spe;
-
-        $usuario->update([
-            'gestionado_spe' => $nuevoEstado,
-            'fecha_gestion_spe' => $nuevoEstado ? now() : null,
-            'gestionado_por' => $nuevoEstado ? Session::get('admin_nombre') : null,
-        ]);
-
-        RegistroAuditoria::create([
-            'tipo_evento' => $nuevoEstado ? 'gestion_spe' : 'revertir_gestion_spe',
-            'descripcion' => ($nuevoEstado ? 'Marcado como gestionado: ' : 'Revertido gestión: ') . $usuario->numero_documento,
-            'ip_address' => $request->ip(),
-            'administrador_id' => Session::get('admin_id'),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'gestionado' => $nuevoEstado,
-            'fecha' => $nuevoEstado ? now()->format('d/m/Y H:i') : null,
-            'admin' => $nuevoEstado ? Session::get('admin_nombre') : null,
-        ]);
+    if ($usuario->gestionado_spe) {
+        return response()->json(['success' => false, 'message' => 'Este usuario ya fue gestionado en el SPE.'], 422);
     }
+
+    $usuario->update([
+        'gestionado_spe'    => true,
+        'fecha_gestion_spe' => now(),
+        'gestionado_por'    => Session::get('admin_nombre'),
+    ]);
+
+    try {
+        Mail::send('emails.confirmacion-spe', ['usuario' => $usuario], function ($message) use ($usuario) {
+            $message->to($usuario->correo, $usuario->primer_nombre . ' ' . $usuario->primer_apellido)
+                    ->subject('Confirmación de registro en el Servicio Público de Empleo');
+        });
+    } catch (\Exception $e) {
+        // El SPE ya se guardó; el fallo de correo no revierte la acción
+    }
+
+    RegistroAuditoria::create([
+        'tipo_evento'      => 'gestion_spe',
+        'descripcion'      => 'Marcado como gestionado: ' . $usuario->numero_documento,
+        'ip_address'       => $request->ip(),
+        'administrador_id' => Session::get('admin_id'),
+    ]);
+
+    return response()->json([
+        'success'    => true,
+        'gestionado' => true,
+        'fecha'      => now()->format('d/m/Y H:i'),
+        'admin'      => Session::get('admin_nombre'),
+    ]);
+}
 
     public function graficas(Request $request)
     {
