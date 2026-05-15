@@ -125,9 +125,9 @@
         .empty-state { text-align: center; color: #999; padding: 40px; font-size: 14px; }
  
         .spe-check { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto; transition: all 0.2s; }
-
-        .spe-check.checked { background: #059669; border-color: #059669; }
-
+       
+        .spe-check.checked { background: #059669; border-color: #059669; cursor: not-allowed; }
+       
         .spe-check:hover { border-color: #059669; }
  
         .footer { background: #1a3c6e; color: white; text-align: center; padding: 20px; margin-top: 40px; }
@@ -254,11 +254,8 @@
 <tr style="{{ $usuario->gestionado_spe ? 'background: #f0fdf4;' : '' }}">
 <td style="text-align: center;">
 <div class="spe-check {{ $usuario->gestionado_spe ? 'checked' : '' }}"
-
-                                 onclick="toggleSpe({{ $usuario->id }}, this)"
-
-                                 title="{{ $usuario->gestionado_spe ? 'Gestionado por ' . $usuario->gestionado_por . ' - ' . ($usuario->fecha_gestion_spe ? $usuario->fecha_gestion_spe->format('d/m/Y H:i') : '') : 'Marcar como gestionado' }}">
-
+     onclick="if(!this.classList.contains('checked')) toggleSpe({{ $usuario->id }}, this)"
+     title="{{ $usuario->gestionado_spe ? 'Gestionado por ' . $usuario->gestionado_por . ' - ' . ($usuario->fecha_gestion_spe ? $usuario->fecha_gestion_spe->format('d/m/Y H:i') : '') : 'Marcar como gestionado' }}">
                                 @if($usuario->gestionado_spe)
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
 
@@ -386,63 +383,27 @@
     function toggleSpe(id, el) {
 
         fetch('/admin/usuarios/' + id + '/gestionar-spe', {
-
-            method: 'POST',
-
-            headers: {
-
-                'Content-Type': 'application/json',
-
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-
-            }
-
-        })
-
-        .then(function(r) { return r.json(); })
-
-        .then(function(data) {
-
-            if (data.success) {
-
-                var row = el.closest('tr');
-
-                var gestionCol = row.querySelectorAll('td')[5];
-
-                if (data.gestionado) {
-
-                    el.classList.add('checked');
-
-                    el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
-
-                    el.title = 'Gestionado por ' + data.admin + ' - ' + data.fecha;
-
-                    row.style.background = '#f0fdf4';
-
-                    gestionCol.innerHTML = '<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br><span style="font-size: 11px; color: #999;">' + data.admin + ' - ' + data.fecha + '</span>';
-
-                } else {
-
-                    el.classList.remove('checked');
-
-                    el.innerHTML = '';
-
-                    el.title = 'Marcar como gestionado';
-
-                    row.style.background = '';
-
-                    gestionCol.innerHTML = '<span style="font-size: 12px; color: #EF9F27; font-weight: 500;">Pendiente</span>';
-
-                }
-
-            }
-
-        });
-
-    }
-</script>
- 
-    <script>
+function toggleSpe(id, el) {
+    fetch('/admin/usuarios/' + id + '/gestionar-spe', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            var row = el.closest('tr');
+            var gestionCol = row.querySelectorAll('td')[5];
+            el.classList.add('checked');
+            el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+            el.title = 'Gestionado por ' + data.admin + ' - ' + data.fecha;
+            row.style.background = '#f0fdf4';
+            gestionCol.innerHTML = '<span style="font-size: 12px; color: #059669; font-weight: 500;">Gestionado</span><br><span style="font-size: 11px; color: #999;">' + data.admin + ' - ' + data.fecha + '</span>';
+        }
+    });
+}
 
     var tiempoInactividad;
 
