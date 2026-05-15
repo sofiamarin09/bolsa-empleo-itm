@@ -24,8 +24,10 @@ class AdminController extends Controller
         $externos = UsuarioAspirante::where('estado_academico', 'externo')->count();
         $pendientes = UsuarioAspirante::where('estado_academico', 'pendiente')->count();
 
-        $correosEnviados = Notificacion::where('estado_envio', 'enviado')->count();
-        $correosFallidos = Notificacion::where('estado_envio', 'fallido')->count();
+        $correosEnviados  = Notificacion::where('estado_envio', 'enviado')->where('tipo_notificacion', '!=', 'confirmacion_spe')->count();
+        $correosFallidos  = Notificacion::where('estado_envio', 'fallido')->where('tipo_notificacion', '!=', 'confirmacion_spe')->count();
+        $correosSpeSent   = Notificacion::where('estado_envio', 'enviado')->where('tipo_notificacion', 'confirmacion_spe')->count();
+        $correosSpeFailed = Notificacion::where('estado_envio', 'fallido')->where('tipo_notificacion', 'confirmacion_spe')->count();
 
         $gestionadosSpe = UsuarioAspirante::where('gestionado_spe', true)->count();
         $pendientesSpe = UsuarioAspirante::where('gestionado_spe', false)->count();
@@ -41,6 +43,8 @@ class AdminController extends Controller
             'pendientes',
             'correosEnviados',
             'correosFallidos',
+            'correosSpeSent',
+            'correosSpeFailed',
             'gestionadosSpe',
             'pendientesSpe',
             'ultimosRegistros'
@@ -225,17 +229,27 @@ class AdminController extends Controller
         'gestionado_por'    => Session::get('admin_nombre'),
     ]);
 
-    $correoUsuario   = $usuario->correo;
-    $nombreUsuario   = $usuario->primer_nombre . ' ' . $usuario->primer_apellido;
+    $correoUsuario = $usuario->correo;
+    $nombreUsuario = $usuario->primer_nombre . ' ' . $usuario->primer_apellido;
 
-    app()->terminating(function () use ($correoUsuario, $nombreUsuario, $usuario) {
+    $notificacion = Notificacion::create([
+        'usuario_id'        => $usuario->id,
+        'tipo_notificacion' => 'confirmacion_spe',
+        'asunto'            => 'Confirmación de registro en el Servicio Público de Empleo',
+        'estado_envio'      => 'pendiente',
+        'intentos'          => 0,
+    ]);
+
+    app()->terminating(function () use ($correoUsuario, $nombreUsuario, $usuario, $notificacion) {
         try {
             Mail::send('emails.confirmacion-spe', ['usuario' => $usuario], function ($message) use ($correoUsuario, $nombreUsuario) {
                 $message->to($correoUsuario, $nombreUsuario)
                         ->subject('Confirmación de registro en el Servicio Público de Empleo')
                         ->replyTo('bolsaempleoitm@gmail.com', 'ITM - Bolsa de empleo');
             });
+            $notificacion->update(['estado_envio' => 'enviado', 'intentos' => 1, 'fecha_envio' => now()]);
         } catch (\Exception $e) {
+            $notificacion->update(['estado_envio' => 'fallido', 'intentos' => 1]);
             Log::error('Error correo SPE: ' . $e->getMessage());
         }
     });

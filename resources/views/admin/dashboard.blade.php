@@ -176,7 +176,7 @@
 </div>
 </div>
  
-        <h3 class="section-title">Notificaciones por correo</h3>
+        <h3 class="section-title">Notificaciones por correo después del pre-registro</h3>
 <div class="notif-grid">
 <div class="notif-card">
 <div class="notif-icon success">
@@ -194,6 +194,28 @@
 <div>
 <p class="notif-label">Correos fallidos</p>
 <p class="notif-value error">{{ $correosFallidos }}</p>
+</div>
+</div>
+</div>
+
+        <h3 class="section-title">Notificaciones por correo después de ser gestionado ante el SPE</h3>
+<div class="notif-grid">
+<div class="notif-card">
+<div class="notif-icon success">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#065f46" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+</div>
+<div>
+<p class="notif-label">Correos enviados</p>
+<p class="notif-value success">{{ $correosSpeSent }}</p>
+</div>
+</div>
+<div class="notif-card">
+<div class="notif-icon error">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+</div>
+<div>
+<p class="notif-label">Correos fallidos</p>
+<p class="notif-value error">{{ $correosSpeFailed }}</p>
 </div>
 </div>
 </div>
