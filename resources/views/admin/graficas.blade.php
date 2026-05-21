@@ -210,7 +210,7 @@
             </div>
 
             <div class="chart-card">
-                <h3>Estado de notificaciones después del pre-registro</h3>
+                <h3>Notificaciones por correo electronico</h3>
                 <div class="chart-container">
                     <canvas id="chartNotificaciones"></canvas>
                 </div>
