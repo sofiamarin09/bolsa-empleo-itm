@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>Nueva contraseña - ITM</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    body { font-family: 'Montserrat', sans-serif; background: #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     .card { background: white; border-radius: 12px; padding: 40px; width: 100%; max-width: 420px; border: 1px solid #e8e8e8; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
     .logo { text-align: center; margin-bottom: 28px; }
     .logo h2 { color: #1a3c6e; font-size: 20px; font-weight: 600; }
     .logo p { color: #888; font-size: 13px; margin-top: 4px; }
     .form-group { margin-bottom: 18px; }
     .form-group label { font-size: 13px; color: #444; display: block; margin-bottom: 6px; font-weight: 500; }
-    .form-group input { width: 100%; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: 'Segoe UI', sans-serif; }
+    .form-group input { width: 100%; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; font-family: 'Montserrat', sans-serif; }
     .form-group input:focus { outline: none; border-color: #2d6ab8; }
     .btn { width: 100%; background: #1a3c6e; color: white; padding: 11px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 6px; }
     .btn:hover { background: #15325a; }
@@ -27,7 +29,7 @@
 
 <div class="card">
     <div class="logo">
-        <h2>ITM - Panel de administración</h2>
+        <img src="/images/logo-itm.svg" alt="ITM" style="height: 44px; margin-bottom: 8px;">
         <p>Establecer nueva contraseña</p>
     </div>
 

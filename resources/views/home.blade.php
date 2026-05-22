@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>ITM - Bolsa de empleo</title>
 <style>
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+        body { font-family: 'Montserrat', sans-serif; background: #f5f5f5; color: #333; }
  
         .header { background: #1a3c6e; color: white; padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; }
 
@@ -98,6 +100,14 @@
 
         .faq-item p { font-size: 13px; color: #666; line-height: 1.6; }
  
+        .footer-logos-section { background: white; text-align: center; padding: 32px 20px; border-top: 1px solid #e8e8e8; }
+
+        .footer-logos-inner { display: flex; align-items: center; justify-content: center; gap: 36px; margin-bottom: 14px; flex-wrap: wrap; }
+
+        .footer-logos-divider { width: 1px; height: 64px; background: #ccc; }
+
+        .footer-legal { font-size: 12px; color: #666; max-width: 580px; margin: 0 auto; line-height: 1.6; }
+
         .footer { background: #1a3c6e; color: white; text-align: center; padding: 24px 20px; }
 
         .footer p { font-size: 13px; opacity: 0.8; margin-bottom: 4px; }
@@ -120,7 +130,7 @@
 <body>
  
     <header class="header">
-<h1>ITM - Bolsa de empleo</h1>
+<a href="/"><img src="/images/logo-itm.svg" alt="ITM" style="height: 42px; filter: brightness(0) invert(1);"></a>
 <nav>
 <a href="/">Inicio</a>
 <a href="/pre-registro">Pre-registro</a>
@@ -233,6 +243,14 @@
 </div>
 </section>
  
+    <div class="footer-logos-section">
+<div class="footer-logos-inner">
+<img src="/images/logo-spe.png" alt="Servicio Público de Empleo" style="height: 70px; object-fit: contain;">
+<div class="footer-logos-divider"></div>
+<img src="/images/logo-itm.svg" alt="Instituto Tecnológico Metropolitano" style="height: 50px; object-fit: contain; filter: brightness(0);">
+</div>
+<p class="footer-legal">Prestador autorizado según resolución número 0304 del 07 de julio 2022 de la Unidad Administrativa Especial del Servicio Público de Empleo</p>
+</div>
     <footer class="footer">
 <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
 <p>Campus Fraternidad</p>

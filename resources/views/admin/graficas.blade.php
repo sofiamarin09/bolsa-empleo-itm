@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Gráficas - ITM Bolsa de empleo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+        body { font-family: 'Montserrat', sans-serif; background: #f5f5f5; color: #333; }
 
         .header { background: #1a3c6e; color: white; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 18px; font-weight: 500; }
@@ -34,7 +36,7 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 13px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         .filtro-group input:focus, .filtro-group select:focus { outline: none; border-color: #2d6ab8; }
         .filtros-actions { display: flex; gap: 10px; }
@@ -58,7 +60,11 @@
         .chart-card h3 { color: #1a3c6e; font-size: 15px; font-weight: 600; margin-bottom: 16px; }
         .chart-container { position: relative; height: 280px; }
 
-        .footer { background: #1a3c6e; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        .footer-logos-section { background: white; text-align: center; padding: 32px 20px; border-top: 1px solid #e8e8e8; }
+        .footer-logos-inner { display: flex; align-items: center; justify-content: center; gap: 36px; margin-bottom: 14px; flex-wrap: wrap; }
+        .footer-logos-divider { width: 1px; height: 64px; background: #ccc; }
+        .footer-legal { font-size: 12px; color: #666; max-width: 580px; margin: 0 auto; line-height: 1.6; }
+        .footer { background: #1a3c6e; color: white; text-align: center; padding: 20px; margin-top: 0; }
         .footer p { font-size: 12px; opacity: 0.7; margin-bottom: 2px; }
 
         @media (max-width: 768px) {
@@ -72,7 +78,7 @@
 <body>
 
     <header class="header">
-        <h1>ITM - Panel de administración</h1>
+        <a href="{{ route('admin.dashboard') }}"><img src="/images/logo-itm.svg" alt="ITM" style="height: 40px; filter: brightness(0) invert(1);"></a>
         <div class="header-right">
             <span>{{ Session::get('admin_nombre') }}</span>
             <form method="POST" action="{{ route('admin.logout') }}" style="display:inline;">
@@ -234,6 +240,14 @@
 
     </div>
 
+    <div class="footer-logos-section">
+<div class="footer-logos-inner">
+<img src="/images/logo-spe.png" alt="Servicio Público de Empleo" style="height: 70px; object-fit: contain;">
+<div class="footer-logos-divider"></div>
+<img src="/images/logo-itm.svg" alt="Instituto Tecnológico Metropolitano" style="height: 50px; object-fit: contain; filter: brightness(0);">
+</div>
+<p class="footer-legal">Prestador autorizado según resolución número 0304 del 07 de julio 2022 de la Unidad Administrativa Especial del Servicio Público de Empleo</p>
+</div>
     <footer class="footer">
         <p>Instituto Tecnológico Metropolitano &mdash; Programa de Egresados</p>
         <p>Campus Fraternidad</p>
