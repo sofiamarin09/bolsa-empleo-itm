@@ -96,7 +96,7 @@ php artisan serve
 
 La aplicación quedará disponible en `http://localhost:8000`.
 
-## Autoras/es
+## Autores
 
 - **Sofía Marín Restrepo** – [github.com/sofiamarin09](https://github.com/sofiamarin09)
 - **Andrés Felipe Ortiz Morales** – [github.com/AndresFelipeMorales](https://github.com/AndresFelipeMorales)
