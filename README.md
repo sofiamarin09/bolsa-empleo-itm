@@ -1,66 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Bolsa de Empleo ITM — Sistema de Pre-registro y Validación Académica
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para el pre-registro de aspirantes a la Bolsa de Empleo del Instituto Tecnológico Metropolitano (ITM). El sistema permite a estudiantes activos y egresados registrar su información personal, valida automáticamente su estado académico contra el SIA del ITM, y gestiona su vinculación ante el Servicio Público de Empleo (SPE).
 
-## About Laravel
+Proyecto de grado (Tecnología en Desarrollo de Software), desarrollado en equipo (2 personas) en el marco de un **semillero de investigación** del ITM, cubriendo el ciclo completo: análisis, diseño, base de datos, backend y frontend, bajo metodología ágil SCRUM con 7 sprints.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Estado del proyecto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Funcional y probado en ambiente de desarrollo local con datos de prueba. Entregado al equipo de Tecnología del ITM para su despliegue en ambiente de producción.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Descripción
 
-## Learning Laravel
+El Programa de Egresados del ITM necesitaba un sistema web para centralizar el pre-registro de aspirantes a la bolsa de empleo, reemplazando un proceso manual basado en archivos Excel. El sistema automatiza la validación académica, envía notificaciones por correo electrónico y permite al personal administrativo gestionar los aspirantes ante el SPE desde un panel de control con gráficos, informes e importación masiva de datos.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Funcionalidades principales
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Módulo público (aspirante)
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Formulario de pre-registro** en 6 secciones: identificación, información personal, contacto, datos adicionales, ubicación dinámica (países, departamentos y municipios con datos DANE) y términos y condiciones.
+- **Validación académica automática**: consulta al SIA del ITM por número de documento y clasifica al aspirante como estudiante activo, egresado, egresado activo (cursando otro programa) o externo.
+- **Notificaciones por correo electrónico**: 4 plantillas diferenciadas según el tipo de usuario, con orientación al SPE para usuarios externos.
+- **Página de resultado** con el detalle de la validación.
 
-## Agentic Development
+### Módulo administrativo (panel de control)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- **Dashboard**: estadísticas de registro, notificaciones enviadas/fallidas, gestión SPE y últimos registros.
+- **Gestión de usuarios** con filtros múltiples, búsqueda, paginación y vista detallada por aspirante.
+- **Gestión SPE**: marcar aspirantes como gestionados con un clic (AJAX), con envío automático de confirmación y trazabilidad de quién gestionó y cuándo.
+- **Importación masiva desde Excel** (.xlsx/.xls/.csv): mapeo manual de columnas, normalización automática de datos, detección de duplicados e importación por lotes (hasta 12.000 registros).
+- **Exportación de informes** en Excel.
+- **Gráficas interactivas** con Chart.js: distribución de registros, notificaciones por correo, registros en el tiempo y resumen de validaciones, con 9 filtros globales.
+- **Roles administrativos**: SuperAdmin y Gestor, con activación/inactivación y middleware de control de sesión.
+- **Recuperación de contraseña** con token seguro y vencimiento por tiempo.
+- **Cierre de sesión automático** por inactividad.
+
+## Tecnologías utilizadas 
+Categoría Herramientas Lenguaje PHP 8.4 Framework Laravel 13.4 Base de datos PostgreSQL 15+ Frontend Blade, HTML, CSS, JavaScript Gráficas Chart.js 4.4.1 + chartjs-plugin-datalabels 2.2.0 Excel Maatwebsite/Excel 3.1.68 (exportación) + PhpSpreadsheet (importación) Correo Laravel Mail con SMTP Control de versiones Git / GitHub Metodología Scrum con 7 sprints
+
+## Base de datos
+
+8 tablas en PostgreSQL, con índices de rendimiento, restricciones de validación y llaves foráneas:
+
+- `administradores` — usuarios del sistema con roles y recuperación de contraseña.
+- `usuarios_aspirantes` — aspirantes con estados académicos y gestión SPE.
+- `validaciones_academicas` — registro de cada validación contra el SIA.
+- `notificaciones` — historial de correos enviados con su estado.
+- `registro_auditoria` — trazabilidad de eventos del sistema.
+- `paises`, `departamentos`, `municipios` — catálogos DANE para ubicación dinámica.
+
+## Mi rol en el proyecto
+
+Desarrollado en equipo por dos personas, con participación en todas las etapas:
+
+- Análisis y levantamiento de requisitos con el cliente (Programa de Egresados del ITM).
+- Diseño de la base de datos (modelo relacional, restricciones e índices).
+- Desarrollo backend: controladores, servicios de validación académica y notificaciones.
+- Desarrollo frontend: formulario de pre-registro y panel administrativo.
+- Implementación de cambios solicitados por el cliente a lo largo de los sprints.
+- Control de versiones con Git, trabajo por ramas (feature branches) y fusión a main.
+
+## Instalación local
+
+Requisitos previos: PHP 8.4, Composer 2.x, PostgreSQL 15+ y Git.
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clonar el repositorio
+git clone https://github.com/sofiamarin09/bolsa-empleo-itm.git
+cd bolsa-empleo-itm
 
-php artisan boost:install
+# 2. Instalar dependencias
+composer install
+
+# 3. Configurar el entorno
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configurar la base de datos en el archivo .env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=bolsa_empleo_itm
+DB_USERNAME=postgres
+DB_PASSWORD=tu_contraseña
+
+# 5. Crear la base de datos y ejecutar migraciones
+php artisan migrate
+
+# 6. Configurar correo SMTP en el archivo .env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+
+# 7. Levantar el servidor
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+La aplicación quedará disponible en `http://localhost:8000`.
 
-## Contributing
+## Autoras/es
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Sofía Marín Restrepo** – [github.com/sofiamarin09](https://github.com/sofiamarin09)
+- **Andrés Felipe Ortiz Morales** – [github.com/AndresFelipeMorales](https://github.com/AndresFelipeMorales)
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT)
-
-
-## Autores y colaboradores
-
-- Andrés Felipe Ortiz Morales — [@AndresFelipeMorales](https://github.com/AndresFelipeMorales)
-- Sofía Marín — [@sofiamarin09](https://github.com/sofiamarin09)
-
-.
+Proyecto desarrollado como trabajo de grado para el programa de Tecnología en Desarrollo de Software del Instituto Tecnológico Metropolitano (ITM), Medellín, Colombia.
